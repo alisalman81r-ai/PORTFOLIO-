@@ -1,0 +1,53 @@
+/**
+ * Custom font loading.
+ *
+ * Self-hosting is the default here — no external requests, no layout shift from
+ * a third-party stylesheet, and full control over `font-display`.
+ *
+ * HOW TO ADD A FONT
+ * -----------------
+ * 1. Drop the `.woff2` file into `src/assets/fonts/`.
+ *    Prefer a *variable* font: one file covers every weight.
+ * 2. Uncomment the matching block below and fix the filename.
+ * 3. Point the token at it in `theme.css` (`--font-display` / `--font-sans`).
+ *
+ * The `url()` paths are relative to THIS file, and Vite fingerprints and
+ * rewrites them at build time — no `/public` copy needed.
+ *
+ * Blocks stay commented until real files exist; a @font-face pointing at a
+ * missing file costs a failed request on every page load.
+ */
+
+/* -- Display / headline face (variable) ----------------------------------- */
+/*
+@font-face {
+  font-family: 'Display';
+  src: url('../assets/fonts/display-variable.woff2') format('woff2-variations');
+  font-weight: 300 900;
+  font-style: normal;
+  font-display: swap;
+  font-named-instance: 'Regular';
+}
+*/
+
+/* -- Body / UI face (variable) -------------------------------------------- */
+/*
+@font-face {
+  font-family: 'Sans';
+  src: url('../assets/fonts/sans-variable.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+*/
+
+/* -- Static-weight example (non-variable fonts only) ---------------------- */
+/*
+@font-face {
+  font-family: 'Sans';
+  src: url('../assets/fonts/sans-medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+*/

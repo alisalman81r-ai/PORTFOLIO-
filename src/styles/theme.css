@@ -1,0 +1,142 @@
+/**
+ * Design tokens.
+ *
+ * Two-layer system:
+ *
+ *   1. Raw palette + semantic CSS variables on `:root` / `[data-theme]`.
+ *      These are plain CSS custom properties, so they can flip at runtime.
+ *   2. `@theme inline` maps the semantic variables into Tailwind's namespaces.
+ *      `inline` is the important part — it makes `bg-canvas` compile to
+ *      `background-color: var(--canvas)` rather than baking in a literal colour,
+ *      which is what lets a single attribute swap re-theme the whole app.
+ *
+ * Add a colour here, never in a component.
+ */
+
+/* ------------------------------------------------------------------ */
+/* Semantic variables                                                  */
+/* ------------------------------------------------------------------ */
+
+:root,
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  /* Surfaces — canvas is the page, surface/elevated stack above it */
+  --canvas: oklch(0.16 0.006 285);
+  --surface: oklch(0.2 0.007 285);
+  --elevated: oklch(0.25 0.008 285);
+
+  /* Content — ink is primary text, muted is secondary, faint is tertiary */
+  --ink: oklch(0.97 0.003 285);
+  --muted: oklch(0.72 0.008 285);
+  --faint: oklch(0.55 0.01 285);
+
+  /* Lines */
+  --line: oklch(1 0 0 / 0.1);
+  --line-strong: oklch(1 0 0 / 0.18);
+
+  /* Brand accent */
+  --accent: oklch(0.78 0.17 78);
+  --accent-ink: oklch(0.18 0.03 78);
+
+  /* Feedback */
+  --positive: oklch(0.75 0.16 155);
+  --negative: oklch(0.66 0.21 25);
+
+  /* Selection + focus */
+  --selection-bg: var(--accent);
+  --selection-ink: var(--accent-ink);
+  --ring: var(--accent);
+}
+
+[data-theme='light'] {
+  color-scheme: light;
+
+  --canvas: oklch(0.985 0.002 285);
+  --surface: oklch(1 0 0);
+  --elevated: oklch(0.97 0.003 285);
+
+  --ink: oklch(0.19 0.007 285);
+  --muted: oklch(0.45 0.01 285);
+  --faint: oklch(0.62 0.01 285);
+
+  --line: oklch(0 0 0 / 0.1);
+  --line-strong: oklch(0 0 0 / 0.16);
+
+  --accent: oklch(0.62 0.17 78);
+  --accent-ink: oklch(0.99 0.01 78);
+}
+
+/* ------------------------------------------------------------------ */
+/* Tailwind theme mapping                                              */
+/* ------------------------------------------------------------------ */
+
+@theme inline {
+  /* -- Colour utilities: bg-canvas, text-ink, border-line, ... -------- */
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-elevated: var(--elevated);
+
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+
+  --color-positive: var(--positive);
+  --color-negative: var(--negative);
+
+  /* -- Type families -------------------------------------------------- */
+  --font-display: 'Display', 'Sans', ui-sans-serif, system-ui, -apple-system,
+    'Segoe UI', sans-serif;
+  --font-sans: 'Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
+    Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', 'JetBrains Mono', Menlo,
+    Consolas, monospace;
+}
+
+@theme {
+  /* -- Fluid display scale -------------------------------------------- */
+  /* clamp() so headlines scale with the viewport without breakpoint jumps. */
+  --text-display-sm: clamp(2rem, 1.4rem + 3vw, 3.25rem);
+  --text-display-sm--line-height: 1.05;
+  --text-display-sm--letter-spacing: -0.02em;
+
+  --text-display: clamp(2.75rem, 1.6rem + 5.2vw, 5.5rem);
+  --text-display--line-height: 1;
+  --text-display--letter-spacing: -0.03em;
+
+  --text-display-lg: clamp(3.5rem, 1.5rem + 9vw, 9rem);
+  --text-display-lg--line-height: 0.94;
+  --text-display-lg--letter-spacing: -0.04em;
+
+  /* -- Layout --------------------------------------------------------- */
+  --breakpoint-3xl: 96rem;
+
+  --radius-4xl: 2rem;
+  --radius-5xl: 2.75rem;
+
+  /* Page gutter + max content width, referenced by the container utility */
+  --spacing-gutter: clamp(1.25rem, 4vw, 4rem);
+  --spacing-section: clamp(5rem, 10vw, 10rem);
+
+  /* -- Motion --------------------------------------------------------- */
+  /* One vocabulary of easings shared by CSS, Motion, and GSAP.
+     `animations/transitions.js` mirrors these as JS arrays. */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-expo: cubic-bezier(0.87, 0, 0.13, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --duration-fast: 200ms;
+  --duration-base: 400ms;
+  --duration-slow: 800ms;
+
+  /* -- Elevation ------------------------------------------------------- */
+  --shadow-soft: 0 1px 2px oklch(0 0 0 / 0.06), 0 8px 24px oklch(0 0 0 / 0.08);
+  --shadow-lifted: 0 2px 4px oklch(0 0 0 / 0.08), 0 24px 48px oklch(0 0 0 / 0.16);
+}

@@ -1,0 +1,114 @@
+/**
+ * Base layer — element defaults on top of Tailwind's preflight.
+ *
+ * Everything here is unconditional and global. Anything that needs a class
+ * belongs in `utilities.css`; anything visual belongs in a component.
+ */
+
+@layer base {
+  html {
+    /* Lenis drives scrolling; native smooth scroll would fight it.
+       `scroll-smooth` stays on <html> as the no-JS / reduced-motion fallback,
+       and SmoothScroll removes it once Lenis takes over. */
+    -webkit-text-size-adjust: 100%;
+    scrollbar-gutter: stable;
+  }
+
+  body {
+    background-color: var(--canvas);
+    color: var(--ink);
+    font-family: theme(--font-sans);
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent;
+
+    /* Colour + background transition on theme flip, nothing else. */
+    transition: background-color 500ms theme(--ease-out-quart),
+      color 500ms theme(--ease-out-quart);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: theme(--font-display);
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background-color: var(--selection-bg);
+    color: var(--selection-ink);
+  }
+
+  /* Visible focus for keyboard users only — never on mouse click. */
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* Media should never overflow its container. */
+  img,
+  video,
+  canvas,
+  svg {
+    display: block;
+    max-width: 100%;
+  }
+
+  /* Anchor targets clear a sticky header. */
+  :target {
+    scroll-margin-block-start: 6rem;
+  }
+
+  /* Firefox */
+  * {
+    scrollbar-color: var(--line-strong) transparent;
+    scrollbar-width: thin;
+  }
+
+  /* WebKit */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--line-strong);
+    border: 3px solid transparent;
+    border-radius: 9999px;
+    background-clip: content-box;
+  }
+}
+
+/**
+ * Reduced motion.
+ *
+ * This is a hard global kill-switch for users who ask for it. JS-driven
+ * animation is handled separately: `usePrefersReducedMotion()` and Motion's
+ * <MotionConfig reducedMotion="user"> cover Motion/GSAP, which CSS cannot reach.
+ */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

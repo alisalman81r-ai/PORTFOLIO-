@@ -1,0 +1,90 @@
+/**
+ * Project utilities.
+ *
+ * `@utility` (Tailwind v4) registers these in the utilities layer, so they
+ * respond to variants like `md:` and `hover:` and are tree-shaken when unused —
+ * which a plain `.class` in @layer would not be.
+ *
+ * Keep this file small. If something is only used once, it belongs in the
+ * component; if it needs props, it belongs in a React component.
+ */
+
+/* Page container: centred, capped, with the responsive gutter from theme.css. */
+@utility container-page {
+  width: 100%;
+  max-width: 90rem;
+  margin-inline: auto;
+  padding-inline: var(--spacing-gutter);
+}
+
+/* Standard vertical rhythm between top-level sections. */
+@utility section-y {
+  padding-block: var(--spacing-section);
+}
+
+/* Hide scrollbars while keeping the element scrollable (carousels, marquees). */
+@utility no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/**
+ * Promote to its own compositor layer.
+ *
+ * Apply immediately before an animation starts and remove when it ends —
+ * a permanent `will-change` wastes GPU memory and can hurt more than it helps.
+ */
+@utility gpu {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Block the browser's native image drag ghost on interactive media. */
+@utility drag-none {
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
+/* Fade content out at the top and bottom edges — for scroll areas and marquees. */
+@utility mask-fade-y {
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 12%,
+    black 88%,
+    transparent 100%
+  );
+}
+
+/* Same, horizontally. */
+@utility mask-fade-x {
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 12%,
+    black 88%,
+    transparent 100%
+  );
+}
+
+/**
+ * Skip-to-content link: visually hidden until it receives keyboard focus.
+ * Paired with the `#main` landmark in RootLayout.
+ */
+@utility skip-link {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  transform: translateY(-120%);
+  transition: transform var(--duration-fast) var(--ease-out-expo);
+
+  &:focus-visible {
+    transform: translateY(0);
+  }
+}

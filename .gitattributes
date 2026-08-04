@@ -1,0 +1,23 @@
+# Normalise line endings so the repository is identical regardless of the OS a
+# contributor is on. Text is stored as LF; Windows checkouts still get CRLF
+# locally via core.autocrlf.
+* text=auto eol=lf
+
+# Never touch binaries.
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.webp  binary
+*.avif  binary
+*.ico   binary
+*.mp4   binary
+*.webm  binary
+*.mov   binary
+*.woff  binary
+*.woff2 binary
+*.ttf   binary
+*.otf   binary
+
+# Collapse lockfile noise in pull request diffs.
+package-lock.json -diff linguist-generated
