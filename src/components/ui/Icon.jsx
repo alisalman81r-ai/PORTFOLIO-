@@ -6,19 +6,29 @@ import {
   Check,
   Clapperboard,
   Code2,
+  Compass,
   Database,
+  ExternalLink,
+  Flag,
+  Images,
   Download,
   GraduationCap,
   Infinity as InfinityIcon,
   Layers,
   MonitorSmartphone,
+  Lightbulb,
   Palette,
   Puzzle,
+  Route,
   Server,
   Sparkles,
   Sprout,
+  Target,
+  TriangleAlert,
+  Trophy,
   User,
   Wrench,
+  X,
   Zap,
 } from 'lucide-react'
 
@@ -70,6 +80,18 @@ const REGISTRY = {
   download: Download,
   arrow: ArrowUpRight,
   user: User,
+
+  // Projects
+  external: ExternalLink,
+  close: X,
+  gallery: Images,
+  overview: Compass,
+  problem: TriangleAlert,
+  solution: Lightbulb,
+  process: Route,
+  results: Trophy,
+  target: Target,
+  milestone: Flag,
 }
 
 /**

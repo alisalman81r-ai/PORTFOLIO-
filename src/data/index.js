@@ -33,10 +33,13 @@ export { SKILL_CATEGORIES, SKILL_LEVELS, ALL_SKILLS, SKILL_COUNT } from './skill
 export { SKILLS_META } from './skillsMeta'
 export {
   PROJECTS,
+  PROJECTS_SORTED,
   FEATURED_PROJECTS,
+  PROJECT_STATUS,
   getProjectBySlug,
-  getProjectCategories,
+  getProjectsByFilter,
 } from './projects'
+export { PROJECTS_META, PROJECT_FILTERS } from './projectsMeta'
 export { EXPERIENCE, EXPERIENCE_SORTED, EDUCATION } from './experience'
 export { SERVICES, PROCESS } from './services'
 export { TESTIMONIALS, HAS_TESTIMONIALS } from './testimonials'

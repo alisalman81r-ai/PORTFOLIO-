@@ -56,6 +56,12 @@ export function AboutPortrait({ className }) {
               src={PERSONAL.avatar}
               alt={PERSONAL.name ? `Portrait of ${PERSONAL.name}` : ''}
               ratio="portrait"
+              // Explicit now that ImageFrame's placeholder defaults are generic
+              // — it is shared with project previews and galleries. Preserves
+              // exactly what this frame rendered before.
+              placeholderIcon="user"
+              placeholderLabel="Add your portrait"
+              placeholderHint="PERSONAL.avatar"
               className="rounded-panel"
             >
               {/* Grounds the image against the frame and gives any future

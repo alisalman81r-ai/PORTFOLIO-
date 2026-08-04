@@ -28,6 +28,14 @@ const Skills = lazy(() =>
 )
 
 /**
+ * Projects is code-split for the same reasons: it is below the fold, and it
+ * pulls in the modal, the GitHub brand mark, and every case-study record.
+ */
+const Projects = lazy(() =>
+  import('@/sections/projects').then((module) => ({ default: module.Projects })),
+)
+
+/**
  * Home route.
  *
  * A page is a *composition root*: it declares which sections appear and in what
@@ -47,15 +55,22 @@ export default function Home() {
       <Hero />
       <About />
 
-      {/* The fallback reserves height so the page does not collapse and jump if
-          the chunk is still in flight. It is empty rather than a spinner: a
-          loading indicator for something the user has not scrolled to yet is
-          noise, and a skeleton that never gets seen is wasted markup. */}
+      {/* One boundary each, not one shared boundary. Suspense resolves as a
+          unit: sharing one would make Skills wait for the Projects chunk before
+          either could render, coupling two independent downloads for no reason.
+          Separate boundaries let each section appear as soon as its own chunk
+          lands.
+
+          The fallback reserves height so the page cannot collapse and jump if a
+          chunk is still in flight. It is empty rather than a spinner — a loading
+          indicator for something the visitor has not scrolled to yet is noise. */}
       <Suspense fallback={<div aria-hidden="true" className="min-h-svh" />}>
         <Skills />
       </Suspense>
 
-      {/* <Projects />     id="projects"     */}
+      <Suspense fallback={<div aria-hidden="true" className="min-h-svh" />}>
+        <Projects />
+      </Suspense>
       {/* <Services />     id="services"     */}
       {/* <Experience />   id="experience"   */}
       {/* <Testimonials /> id="testimonials" */}

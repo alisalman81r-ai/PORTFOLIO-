@@ -24,6 +24,7 @@ export { Icon } from './Icon'
 export { Tag } from './Tag'
 export { ImageFrame } from './ImageFrame'
 export { GlowBorder } from './GlowBorder'
+export { Modal } from './Modal'
 
 /* Interaction */
 export { MagneticButton } from './MagneticButton'
