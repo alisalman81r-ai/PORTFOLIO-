@@ -142,6 +142,20 @@ export const FORM_FIELDS = [
  */
 export const HONEYPOT_FIELD = 'company_website'
 
+/**
+ * Labels for the contact details panel.
+ *
+ * Here rather than inline in the component for the same reason as every other
+ * string on the site: copy changes for editorial reasons and should never
+ * require touching rendering logic.
+ */
+export const CONTACT_PANEL = {
+  socialsHeading: 'Elsewhere',
+  resumeHeading: 'Prefer the short version?',
+  resumeBody: 'The CV covers the same ground in one page.',
+  resumeCta: 'Download résumé',
+}
+
 /** Copy for each submission state. Kept out of the component. */
 export const FORM_MESSAGES = {
   success: 'Thanks — your message is on its way. I will reply within two working days.',

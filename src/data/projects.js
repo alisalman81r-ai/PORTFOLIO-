@@ -30,6 +30,8 @@
  * Rewrite it all; the structure will hold.
  */
 
+import { getProjectMedia } from './media'
+
 /**
  * Delivery status. Drives the badge on the card.
  * @typedef {'live'|'in-development'|'concept'|'archived'} ProjectStatus
@@ -57,14 +59,18 @@ export const PROJECT_STATUS = {
  * @property {string} problem       What was wrong before.
  * @property {string} solution      What you built, and why that way.
  * @property {string[]} technologies
+ * @property {string} role         What you actually did. Be precise — credit
+ *   matters, and "Design & Development" reads very differently from "Frontend".
+ * @property {string} duration     How long it ran, e.g. '6 weeks'. Sets the
+ *   scale of the engagement, which is the first thing a client wants to know.
  * @property {{title: string, description: string}[]} features
  * @property {{challenge: string, solution: string}[]} challenges  Paired, because
  *   a challenge without its resolution is just a complaint.
  * @property {{step: string, title: string, description: string}[]} process
  * @property {string[]} results     Qualitative outcomes. NO INVENTED NUMBERS —
  *   a fabricated "40% faster" is a claim you would have to defend.
- * @property {string|null} thumbnail
- * @property {string[]} gallery
+ * @property {string|null} thumbnail Resolved from `media.js` — never set here.
+ * @property {string[]} gallery     Resolved from `media.js` — never set here.
  * @property {string} githubUrl     Empty string renders the button disabled.
  * @property {string} liveUrl       Empty string renders the button disabled.
  * @property {boolean} featured
@@ -80,6 +86,8 @@ export const PROJECTS = [
     filters: ['web-apps', 'frontend'],
     year: 2025,
     status: 'live',
+    role: 'Design & Frontend Development',
+    duration: '6 weeks',
     shortDescription:
       'A client-facing marketing site for a construction firm, with a content structure the team can maintain without a developer.',
     longDescription:
@@ -116,8 +124,8 @@ export const PROJECTS = [
       'Imagery loads without layout shift on slow connections',
       'One layout system carries every page type',
     ],
-    thumbnail: null,
-    gallery: [],
+    thumbnail: getProjectMedia('construction-website').thumbnail,
+    gallery: getProjectMedia('construction-website').gallery,
     githubUrl: '',
     liveUrl: '',
     featured: true,
@@ -130,6 +138,8 @@ export const PROJECTS = [
     filters: ['ui-ux', 'creative'],
     year: 2025,
     status: 'live',
+    role: 'Creative Direction & Storyboarding',
+    duration: '3 weeks',
     shortDescription:
       'Narrative and visual direction for a client project — mapping the flow and pacing of the experience before implementation began.',
     longDescription:
@@ -166,8 +176,8 @@ export const PROJECTS = [
       'Motion intent documented, so the build matched the direction',
       'Scope settled before it became expensive to change',
     ],
-    thumbnail: null,
-    gallery: [],
+    thumbnail: getProjectMedia('klyra-storyboard').thumbnail,
+    gallery: getProjectMedia('klyra-storyboard').gallery,
     githubUrl: '',
     liveUrl: '',
     featured: true,
@@ -180,6 +190,8 @@ export const PROJECTS = [
     filters: ['web-apps', 'frontend', 'ui-ux'],
     year: 2024,
     status: 'in-development',
+    role: 'Frontend Development & UI Design',
+    duration: '8 weeks',
     shortDescription:
       'An analytics interface built around what a user needs to decide, rather than around every metric the database can return.',
     longDescription:
@@ -216,8 +228,8 @@ export const PROJECTS = [
       'One chart language across every view',
       'Filter interactions stay responsive on large datasets',
     ],
-    thumbnail: null,
-    gallery: [],
+    thumbnail: getProjectMedia('dashboard').thumbnail,
+    gallery: getProjectMedia('dashboard').gallery,
     githubUrl: '',
     liveUrl: '',
     featured: false,
@@ -230,6 +242,8 @@ export const PROJECTS = [
     filters: ['web-apps', 'frontend'],
     year: 2024,
     status: 'in-development',
+    role: 'PLACEHOLDER — what you actually did',
+    duration: 'PLACEHOLDER',
     shortDescription:
       'PLACEHOLDER — describe EXMO in one or two sentences: what it is, who it is for, and what it does that matters.',
     longDescription:
@@ -253,8 +267,8 @@ export const PROJECTS = [
       { step: '03', title: 'PLACEHOLDER', description: 'How it shipped.' },
     ],
     results: ['PLACEHOLDER — a qualitative outcome. Use a number only if you measured one.'],
-    thumbnail: null,
-    gallery: [],
+    thumbnail: getProjectMedia('exmo').thumbnail,
+    gallery: getProjectMedia('exmo').gallery,
     githubUrl: '',
     liveUrl: '',
     featured: false,

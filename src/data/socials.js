@@ -28,7 +28,8 @@
  */
 
 /**
- * PLACEHOLDER — replace each `href` with a real profile.
+ * GitHub is REAL — taken from the account this repository is pushed to. The
+ * rest are placeholders pointing at example.com.
  *
  * Left as example.com rather than invented usernames: a plausible-looking but
  * wrong handle is worse than an obviously empty one, because it can ship
@@ -40,9 +41,9 @@ export const SOCIAL_LINKS = [
   {
     id: 'github',
     label: 'GitHub',
-    href: 'https://example.com',
+    href: 'https://github.com/alisalman81r-ai',
     icon: 'github',
-    handle: '@username',
+    handle: '@alisalman81r-ai',
     primary: true,
   },
   {

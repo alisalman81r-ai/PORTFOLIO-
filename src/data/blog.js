@@ -1,3 +1,5 @@
+import { MEDIA } from './media'
+
 /**
  * Blog / insights.
  *
@@ -8,14 +10,9 @@
  * activates itself.
  *
  * COVER IMAGES
- * Leave `cover` as `null` until real artwork exists — `ImageFrame` renders a
- * designed placeholder instead of a broken image. When you have one, IMPORT it
- * rather than writing a string path, so Vite fingerprints it and a typo fails
- * the build instead of shipping a broken `<img>`:
- *
- *   import coverMotion from '@/assets/images/blog-motion.jpg'
- *   …
- *   cover: coverMotion,
+ * Resolved from `media.js` — never set here. A post with no registry entry
+ * renders `ImageFrame`'s designed placeholder, so writing an article before its
+ * artwork exists is safe.
  */
 
 export const BLOG_META = {
@@ -53,7 +50,7 @@ export const POSTS = [
       'Most web animation is decoration wearing the costume of craft. A look at when motion actually helps a user, and the point at which it starts costing them.',
     date: '2025-11-18',
     readingTime: 6,
-    cover: null,
+    cover: MEDIA.blog['motion-with-purpose'],
     url: '',
     featured: true,
   },
@@ -66,7 +63,7 @@ export const POSTS = [
       'Why a three-layer token system beats a flat list of colours, and how naming things for their role rather than their value makes a redesign a one-file change.',
     date: '2025-10-02',
     readingTime: 8,
-    cover: null,
+    cover: MEDIA.blog['design-tokens'],
     url: '',
     featured: true,
   },
@@ -79,7 +76,7 @@ export const POSTS = [
       'A budget agreed at the start is worth more than an audit at the end. How to decide what a page is allowed to cost before anyone writes the first component.',
     date: '2025-08-27',
     readingTime: 7,
-    cover: null,
+    cover: MEDIA.blog['performance-budget'],
     url: '',
     featured: true,
   },
@@ -92,7 +89,7 @@ export const POSTS = [
       'Semantic elements, real labels, and a visible focus ring get you most of the way. A practical list of the things that are free if you do them first.',
     date: '2025-07-09',
     readingTime: 5,
-    cover: null,
+    cover: MEDIA.blog['accessible-by-default'],
     url: '',
     featured: false,
   },

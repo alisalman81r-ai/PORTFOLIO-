@@ -65,6 +65,38 @@ export function ProjectModal({ project, onClose }) {
             </h3>
 
             <p className="lead mt-4 max-w-prose">{project.longDescription}</p>
+
+            {/*
+              Engagement facts, as a description list.
+
+              `<dl>` rather than a row of divs: these are label/value pairs, and
+              the element gives assistive tech the association for free. Role and
+              duration are the two things a prospective client looks for first —
+              what you actually did, and how long it took.
+
+              Each pair renders only when it has a value, so a project without a
+              recorded duration shows one column instead of an empty label.
+            */}
+            <dl className="mt-6 flex flex-wrap gap-x-10 gap-y-4 border-t border-line pt-6">
+              {project.role && (
+                <div>
+                  <dt className="eyebrow flex text-faint">Role</dt>
+                  <dd className="mt-1.5 text-body-sm text-ink">{project.role}</dd>
+                </div>
+              )}
+
+              {project.duration && (
+                <div>
+                  <dt className="eyebrow flex text-faint">Duration</dt>
+                  <dd className="mt-1.5 text-body-sm text-ink">{project.duration}</dd>
+                </div>
+              )}
+
+              <div>
+                <dt className="eyebrow flex text-faint">Year</dt>
+                <dd className="mt-1.5 text-body-sm text-ink">{project.year}</dd>
+              </div>
+            </dl>
           </header>
 
           {/* ── Gallery ────────────────────────────────────────────────── */}

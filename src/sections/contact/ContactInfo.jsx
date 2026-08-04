@@ -2,7 +2,7 @@ import { Icon, MagneticButton } from '@/components/ui'
 import { TechIcon } from '@/components/ui/TechIcon'
 import { Reveal } from '@/components/animations'
 import { fadeInUp } from '@/animations'
-import { CONTACT_METHODS, PERSONAL, SOCIAL_LINKS } from '@/data'
+import { CONTACT_METHODS, CONTACT_PANEL, PERSONAL, SOCIAL_LINKS } from '@/data'
 import { cn } from '@/utils'
 
 /**
@@ -76,7 +76,7 @@ export function ContactInfo({ className }) {
 
       <Reveal variants={fadeInUp} delay={0.15}>
         <div className="border-t border-line pt-8">
-          <h3 className="eyebrow flex text-faint">Elsewhere</h3>
+          <h3 className="eyebrow flex text-faint">{CONTACT_PANEL.socialsHeading}</h3>
 
           <ul className="mt-4 flex flex-wrap gap-2">
             {SOCIAL_LINKS.map((social) => (
@@ -102,9 +102,11 @@ export function ContactInfo({ className }) {
 
       <Reveal variants={fadeInUp} delay={0.2}>
         <div className="card card-glass rounded-card">
-          <h3 className="font-display text-base font-medium text-ink">Prefer the short version?</h3>
+          <h3 className="font-display text-base font-medium text-ink">
+            {CONTACT_PANEL.resumeHeading}
+          </h3>
           <p className="mt-2 text-body-sm text-muted">
-            The CV covers the same ground in one page.
+            {CONTACT_PANEL.resumeBody}
           </p>
 
           <MagneticButton
@@ -115,7 +117,7 @@ export function ContactInfo({ className }) {
             download
             className="btn btn-outline btn-sm group/cta mt-5"
           >
-            Download résumé
+            {CONTACT_PANEL.resumeCta}
             <Icon
               name="download"
               className="size-4 transition-transform duration-base ease-out-expo group-hover/cta:translate-y-0.5"

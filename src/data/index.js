@@ -24,6 +24,7 @@
 
 export { SITE } from './site'
 export { FOOTER } from './footer'
+export { MEDIA, getProjectMedia } from './media'
 export { PERSONAL } from './personal'
 export { HERO } from './hero'
 export { ABOUT } from './about'
@@ -50,6 +51,7 @@ export { POSTS, POSTS_SORTED, FEATURED_POSTS, HAS_POSTS, BLOG_META, getPostBySlu
 export {
   CONTACT_META,
   CONTACT_METHODS,
+  CONTACT_PANEL,
   FORM_FIELDS,
   FORM_MESSAGES,
   HONEYPOT_FIELD,

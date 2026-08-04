@@ -1,3 +1,5 @@
+import { MEDIA } from './media'
+
 /**
  * Client testimonials.
  *
@@ -55,7 +57,7 @@ export const TESTIMONIALS = [
     author: 'Client Name',
     role: 'Role',
     company: 'Company',
-    avatar: null,
+    avatar: MEDIA.testimonials['placeholder-1'],
     rating: 5,
     projectType: 'Web Application',
     sourceUrl: '',
@@ -67,7 +69,7 @@ export const TESTIMONIALS = [
     author: 'Client Name',
     role: 'Role',
     company: 'Company',
-    avatar: null,
+    avatar: MEDIA.testimonials['placeholder-2'],
     rating: 5,
     projectType: 'Marketing Site',
     sourceUrl: '',
@@ -79,7 +81,7 @@ export const TESTIMONIALS = [
     author: 'Client Name',
     role: 'Role',
     company: 'Company',
-    avatar: null,
+    avatar: MEDIA.testimonials['placeholder-3'],
     rating: 5,
     projectType: 'Design & Build',
     sourceUrl: '',
@@ -91,7 +93,7 @@ export const TESTIMONIALS = [
     author: 'Client Name',
     role: 'Role',
     company: 'Company',
-    avatar: null,
+    avatar: MEDIA.testimonials['placeholder-4'],
     rating: 5,
     projectType: 'Performance Audit',
     sourceUrl: '',

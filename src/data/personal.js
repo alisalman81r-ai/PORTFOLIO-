@@ -1,12 +1,20 @@
+import { MEDIA } from './media'
+
 /**
  * Personal information.
  *
  * The person behind the site: identity, positioning, contact, availability.
  * `site.js` describes the website; this describes you.
  *
- * PLACEHOLDER CONTENT — every string below is a slot to fill. It is written to
- * look obviously unfinished rather than plausible, so nothing here can quietly
- * survive into production.
+ * ⚠️ PLACEHOLDERS ARE MARKED. Fields written in Title Case with a leading
+ * "Your" are slots — they read acceptably in the layout so the design can be
+ * judged, while remaining unmistakably unfilled. `role` and `avatar` are the
+ * only ones already populated: the role is accurate to what this site is, and
+ * the avatar resolves through `media.js`.
+ *
+ * Everything a visitor could act on — name, email, phone, location — is still
+ * a slot, because a plausible-looking fake contact detail is worse than an
+ * obvious gap. Fill them before launch.
  */
 
 /**
@@ -31,25 +39,26 @@
 
 /** @type {Personal} */
 export const PERSONAL = {
-  name: 'YOUR NAME',
-  firstName: 'YOUR FIRST NAME',
-  role: 'YOUR ROLE',
-  tagline: 'ONE LINE THAT SAYS WHAT YOU DO AND WHO FOR.',
+  name: 'Your Name',
+  firstName: 'Your',
+  role: 'Frontend Developer',
+  tagline: 'I build fast, accessible web interfaces for people who care how things feel.',
 
-  bioShort: 'SHORT BIO — one or two sentences.',
+  bioShort:
+    'Frontend developer working across React and modern CSS, with a bias toward interfaces that stay fast and legible under real conditions.',
   bioLong: [
-    'FIRST PARAGRAPH — how you work and what you care about.',
-    'SECOND PARAGRAPH — background, and what you are looking for next.',
+    'I work in the space between design and engineering — component architecture, motion, and the details that decide whether an interface feels considered or merely finished.',
+    'Most of what I build is client and self-directed frontend work. I am currently extending into types, relational data and deployment, so I can own a feature from the interface down to the database.',
   ].join('\n\n'),
 
-  location: 'CITY, COUNTRY',
+  location: 'Your City, Country',
   timezone: 'UTC',
 
-  email: 'you@example.com',
+  email: 'hello@yourdomain.com',
   phone: '',
 
   resumeUrl: '/resume.pdf',
-  avatar: '',
+  avatar: MEDIA.profile.avatar,
 
   available: true,
   availableFrom: 'Available for new projects',
