@@ -1,103 +1,135 @@
 /**
- * Work history and education.
+ * Professional experience.
  *
- * Shaped for a vertical timeline: each entry is self-contained and sorts by
- * start date.
+ * Not every entry is a job. Self-directed work and continuous learning belong
+ * on a timeline that is honest about how a developer actually builds up — and
+ * hiding them would leave gaps that look worse than the truth.
  *
- * DATES ARE ISO STRINGS ('2024-03'), NOT DISPLAY TEXT ('Mar 2024').
+ * DATES
+ * Prefer ISO `start`/`end` ('2024-03'), which sorts and localises, and let
+ * `formatDateRange()` from `@/utils` render it. A null `end` means "Present"
+ * and is computed, so a current role never goes stale.
  *
- * Storing formatted text means it cannot be sorted, compared, or localised, and
- * the format is duplicated across every entry. Store the machine value; format
- * at render time with `formatDateRange()` from `@/utils`.
+ * Where the real dates are not known yet, `period` is a display-string fallback
+ * and the component uses it when `start` is absent. Fill in `start`/`end` and
+ * delete `period` — nothing else changes.
  *
- * A null `end` means "present" — computed, so a current role never goes stale.
+ * ⚠️ PLACEHOLDER. The four entries are the ones you named; the periods are
+ * `20XX` because the real dates are yours and inventing them would put
+ * fabricated claims on a page recruiters read. Descriptions are generic
+ * scaffolding shaped to each entry type.
  */
+
+export const EXPERIENCE_META = {
+  badge: 'Experience',
+  headline: [{ text: 'Where the' }, { text: 'hours went', accent: true }],
+  intro:
+    'Client work, self-directed projects, and the deliberate practice in between. Listed in the order it happened.',
+}
 
 /**
  * @typedef {object} ExperienceEntry
- * @property {string} id           Stable key.
- * @property {string} role         Job title.
- * @property {string} company      Employer or client.
- * @property {string} [companyUrl] Links the company name.
- * @property {string} location     'City, Country' or 'Remote'.
- * @property {'full-time'|'contract'|'freelance'|'internship'} type
- * @property {string} start        ISO 'YYYY-MM'.
- * @property {string|null} end     ISO 'YYYY-MM', or null for a current role.
- * @property {string} summary      One or two sentences on scope and ownership.
- * @property {string[]} highlights Bullets. Lead with impact, not responsibilities.
- * @property {string[]} [stack]    Technologies used in the role.
+ * @property {string} id
+ * @property {string} role         Title, or what the entry is.
+ * @property {string} context      Employer, client, or the nature of the work.
+ * @property {string} [period]     Display fallback when `start` is unknown.
+ * @property {string} [start]      ISO 'YYYY-MM'. Preferred — sorts and localises.
+ * @property {string|null} [end]   ISO 'YYYY-MM', or null for ongoing.
+ * @property {'freelance'|'personal'|'client'|'learning'} type
+ * @property {string} description  Two or three sentences on scope and ownership.
+ * @property {string[]} highlights Bullets. Lead with impact, not responsibility.
+ * @property {string[]} technologies
+ * @property {boolean} [current]   Highlights the node and marks it as ongoing.
  */
 
 /**
- * PLACEHOLDER — replace with real history.
- *
- * Employment history is a verifiable factual claim that gets checked in
- * interviews and reference calls, so nothing here invents a company, a title,
- * or a date. Fill it in from your actual CV.
- *
- * @type {ExperienceEntry[]}
+ * Type badges. Declared here so the vocabulary sits beside the data using it.
  */
+export const EXPERIENCE_TYPES = {
+  freelance: { label: 'Freelance', tone: 'accent' },
+  client: { label: 'Client work', tone: 'default' },
+  personal: { label: 'Self-directed', tone: 'outline' },
+  learning: { label: 'Ongoing', tone: 'outline' },
+}
+
+/** @type {ExperienceEntry[]} */
 export const EXPERIENCE = [
   {
-    id: 'role-1',
-    role: 'YOUR ROLE',
-    company: 'COMPANY NAME',
-    companyUrl: '',
-    location: 'LOCATION',
-    type: 'full-time',
-    start: '2024-01',
-    end: null,
-    summary: 'WHAT YOU OWN AND THE SCOPE OF THE WORK.',
+    id: 'freelance',
+    role: 'Freelance Web Developer',
+    context: 'Independent',
+    period: '20XX — Present',
+    type: 'freelance',
+    current: true,
+    description:
+      'Building and shipping websites and web apps for clients directly — scoping the work, designing the structure, writing the code, and handing over something the client can maintain.',
     highlights: [
-      'ACHIEVEMENT — lead with the outcome, then how.',
-      'ACHIEVEMENT — include a real number where you have one.',
+      'Own projects end to end, from first conversation to deployment',
+      'Translate business goals into scope a fixed budget can actually cover',
+      'Hand over documentation, not just a repository',
     ],
-    stack: ['TECH', 'TECH'],
+    technologies: ['React', 'Next.js', 'Tailwind CSS', 'Node.js', 'Vercel'],
   },
   {
-    id: 'role-2',
-    role: 'PREVIOUS ROLE',
-    company: 'COMPANY NAME',
-    location: 'LOCATION',
-    type: 'full-time',
-    start: '2022-01',
-    end: '2023-12',
-    summary: 'WHAT YOU DID HERE.',
-    highlights: ['ACHIEVEMENT'],
-    stack: ['TECH'],
+    id: 'client-storyboard',
+    role: 'Client Storyboard Project',
+    context: 'Klyra',
+    period: '20XX',
+    type: 'client',
+    description:
+      'Narrative and visual direction for a client project — mapping the sequence, pacing and motion intent before implementation started, so the build began from a decision rather than a blank page.',
+    highlights: [
+      'Defined the beat-by-beat sequence and its purpose',
+      'Specified motion intent in a form an implementer could work from',
+      'Settled scope while it was still cheap to change',
+    ],
+    technologies: ['Figma', 'Motion Design', 'Design Systems'],
+  },
+  {
+    id: 'personal-projects',
+    role: 'Personal Projects',
+    context: 'Self-directed',
+    period: '20XX — Present',
+    type: 'personal',
+    description:
+      'Projects built to learn something specific rather than to a brief. Where I try the approach that would be too risky to trial on a client deadline.',
+    highlights: [
+      'Full ownership of architecture decisions and their consequences',
+      'Where new tools get evaluated before they reach client work',
+      'Several became the case studies in this portfolio',
+    ],
+    technologies: ['React', 'JavaScript', 'GSAP', 'MongoDB'],
+  },
+  {
+    id: 'continuous-learning',
+    role: 'Continuous Learning',
+    context: 'Ongoing',
+    period: '20XX — Present',
+    type: 'learning',
+    current: true,
+    description:
+      'Deliberate practice on the parts I am weakest at — currently types, relational data and deployment — so the gap between what I can design and what I can build keeps closing.',
+    highlights: [
+      'Working through TypeScript, PostgreSQL, Prisma and Docker',
+      'Reading source rather than only documentation',
+      'Rebuilding solved problems to understand why the solution works',
+    ],
+    technologies: ['TypeScript', 'PostgreSQL', 'Prisma', 'Docker'],
   },
 ]
 
 /**
  * @typedef {object} EducationEntry
  * @property {string} id
- * @property {string} qualification Degree or certification.
+ * @property {string} qualification
  * @property {string} institution
- * @property {string} start         ISO 'YYYY-MM'.
- * @property {string|null} end
- * @property {string} [note]        Honours, thesis, relevant focus.
+ * @property {string} period
+ * @property {string} [note]
  */
-
-/** @type {EducationEntry[]} */
-export const EDUCATION = [
-  {
-    id: 'education-1',
-    qualification: 'QUALIFICATION',
-    institution: 'INSTITUTION',
-    start: '2018-09',
-    end: '2022-06',
-    note: '',
-  },
-]
 
 /**
- * Experience sorted newest first — current roles at the top.
- *
- * Sorts a *copy*: `Array.prototype.sort` mutates in place, and reordering the
- * exported array would corrupt it for every other importer.
- *
- * @type {ExperienceEntry[]}
+ * Kept for a future education block. Empty rather than invented — a
+ * qualification is a verifiable claim.
+ * @type {EducationEntry[]}
  */
-export const EXPERIENCE_SORTED = [...EXPERIENCE].sort((a, b) =>
-  b.start.localeCompare(a.start),
-)
+export const EDUCATION = []

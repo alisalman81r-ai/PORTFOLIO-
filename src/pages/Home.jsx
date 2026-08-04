@@ -1,39 +1,50 @@
 import { Suspense, lazy } from 'react'
 
 // Imported from their own folders rather than the `@/sections` barrel. The
-// barrel statically re-exports every section including Skills, so pulling it in
-// here would defeat the dynamic import below — the bundler would already have a
-// static path to that module and keep it in the entry chunk. Rolldown warns
-// about exactly this (INEFFECTIVE_DYNAMIC_IMPORT).
+// barrel statically re-exports every section, so pulling it in here would
+// defeat the dynamic imports below — the bundler would already have a static
+// path to those modules and keep them in the entry chunk. Rolldown warns about
+// exactly this (INEFFECTIVE_DYNAMIC_IMPORT).
 import { Hero } from '@/sections/hero'
 import { About } from '@/sections/about'
 
 /**
- * Skills is code-split.
+ * Wraps a dynamic import so `lazy` gets the `default` export it expects, while
+ * sections keep their named exports.
  *
- * It carries ~37 kB of Simple Icons brand marks — more than the rest of the app
- * combined — and sits well below the fold. Splitting it keeps that weight out of
- * the entry chunk, so the hero renders from a smaller bundle.
+ * The `import()` argument stays a literal inside the arrow function, so the
+ * bundler can still statically analyse it and emit a chunk — a loader built
+ * from a variable path could not be split.
  *
- * `lazy` starts the fetch as soon as this route renders, not when the section
- * scrolls into view, so it downloads in parallel while the visitor is still
- * reading the hero. That is the right trade here: deferring until intersection
- * would save nothing for a user who scrolls, and would risk a visible gap.
- *
- * The `.then()` shim exists because `lazy` expects a module with a `default`
- * export, and sections use named exports throughout.
+ * @param {() => Promise<Record<string, React.ComponentType>>} loader
+ * @param {string} name Named export to unwrap.
  */
-const Skills = lazy(() =>
-  import('@/sections/skills').then((module) => ({ default: module.Skills })),
-)
+const lazySection = (loader, name) =>
+  lazy(() => loader().then((module) => ({ default: module[name] })))
 
 /**
- * Projects is code-split for the same reasons: it is below the fold, and it
- * pulls in the modal, the GitHub brand mark, and every case-study record.
+ * Everything below the fold is code-split.
+ *
+ * The hero and about section are what a visitor sees first, so they ship in the
+ * entry chunk. Everything after downloads in parallel while they read — Skills
+ * alone carries ~37 kB of brand marks, and Projects pulls in the modal and
+ * every case-study record.
  */
-const Projects = lazy(() =>
-  import('@/sections/projects').then((module) => ({ default: module.Projects })),
-)
+const Skills = lazySection(() => import('@/sections/skills'), 'Skills')
+const Projects = lazySection(() => import('@/sections/projects'), 'Projects')
+const Services = lazySection(() => import('@/sections/services'), 'Services')
+const Process = lazySection(() => import('@/sections/process'), 'Process')
+const Experience = lazySection(() => import('@/sections/experience'), 'Experience')
+const Achievements = lazySection(() => import('@/sections/Achievements'), 'Achievements')
+
+/**
+ * Fallback for a section still in flight.
+ *
+ * Reserves height so the page cannot collapse and jump. Empty rather than a
+ * spinner — a loading indicator for something the visitor has not scrolled to
+ * yet is noise, and a skeleton that is never seen is wasted markup.
+ */
+const Placeholder = () => <div aria-hidden="true" className="min-h-svh" />
 
 /**
  * Home route.
@@ -45,9 +56,13 @@ const Projects = lazy(() =>
  * site becomes reordering these lines, and any section can be lifted onto its
  * own route without being rewritten.
  *
- * The ids in the comments match `SECTION_IDS` in `@/data/navigation`, which the
- * header's scroll-spy and nav anchors resolve against. Links to sections that
- * do not exist yet are inert by design — see `hooks/useAnchorScroll`.
+ * Each lazy section gets its OWN Suspense boundary. Suspense resolves as a
+ * unit, so a shared boundary would make every section wait for the slowest
+ * chunk before any of them could render.
+ *
+ * The ids match `SECTION_IDS` in `@/data/navigation`, which the header's
+ * scroll-spy and nav anchors resolve against. `#process` and `#achievements`
+ * have no nav entry by design — they are read on the way past, not navigated to.
  */
 export default function Home() {
   return (
@@ -55,24 +70,30 @@ export default function Home() {
       <Hero />
       <About />
 
-      {/* One boundary each, not one shared boundary. Suspense resolves as a
-          unit: sharing one would make Skills wait for the Projects chunk before
-          either could render, coupling two independent downloads for no reason.
-          Separate boundaries let each section appear as soon as its own chunk
-          lands.
-
-          The fallback reserves height so the page cannot collapse and jump if a
-          chunk is still in flight. It is empty rather than a spinner — a loading
-          indicator for something the visitor has not scrolled to yet is noise. */}
-      <Suspense fallback={<div aria-hidden="true" className="min-h-svh" />}>
+      <Suspense fallback={<Placeholder />}>
         <Skills />
       </Suspense>
 
-      <Suspense fallback={<div aria-hidden="true" className="min-h-svh" />}>
+      <Suspense fallback={<Placeholder />}>
         <Projects />
       </Suspense>
-      {/* <Services />     id="services"     */}
-      {/* <Experience />   id="experience"   */}
+
+      <Suspense fallback={<Placeholder />}>
+        <Services />
+      </Suspense>
+
+      <Suspense fallback={<Placeholder />}>
+        <Process />
+      </Suspense>
+
+      <Suspense fallback={<Placeholder />}>
+        <Experience />
+      </Suspense>
+
+      <Suspense fallback={<Placeholder />}>
+        <Achievements />
+      </Suspense>
+
       {/* <Testimonials /> id="testimonials" */}
       {/* <Blog />         id="blog"         */}
       {/* <Contact />      id="contact"      */}

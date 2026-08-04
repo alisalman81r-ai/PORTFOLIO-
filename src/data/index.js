@@ -40,6 +40,8 @@ export {
   getProjectsByFilter,
 } from './projects'
 export { PROJECTS_META, PROJECT_FILTERS } from './projectsMeta'
-export { EXPERIENCE, EXPERIENCE_SORTED, EDUCATION } from './experience'
-export { SERVICES, PROCESS } from './services'
+export { EXPERIENCE, EXPERIENCE_META, EXPERIENCE_TYPES, EDUCATION } from './experience'
+export { SERVICES, SERVICES_META } from './services'
+export { PROCESS_STEPS, PROCESS_META } from './process'
+export { ACHIEVEMENTS, ACHIEVEMENTS_META } from './achievements'
 export { TESTIMONIALS, HAS_TESTIMONIALS } from './testimonials'

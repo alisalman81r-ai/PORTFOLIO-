@@ -1,104 +1,88 @@
 /**
  * Services offered.
  *
- * What a prospective client can hire you for. Distinct from `skills.js`:
- * skills are tools you know, services are outcomes you sell. A client buys
- * "a site that loads fast and converts", not "React".
+ * What a client can hire you for. Distinct from `skills.js`: skills are tools
+ * you know, services are outcomes someone buys. A client is not purchasing
+ * "React" — they are purchasing a site that loads fast and converts.
+ *
+ * Descriptions are written from the client's side of the table. "Component
+ * architecture" is a means; "a site your team can extend without me" is the
+ * thing being bought.
  */
+
+export const SERVICES_META = {
+  badge: 'Services',
+  headline: [{ text: 'What I can' }, { text: 'build for you', accent: true }],
+  intro:
+    'Six things I do well, and will say honestly when a project needs something else. Every engagement ends with work you can maintain — not a codebase that only makes sense to the person who wrote it.',
+}
 
 /**
  * @typedef {object} Service
  * @property {string} id
- * @property {string} title       Short, outcome-shaped.
- * @property {string} description Two or three sentences on what is included.
+ * @property {string} icon         Registry key resolved by `<Icon />`.
+ * @property {string} title
+ * @property {string} description  Two or three sentences on what is included.
  * @property {string[]} deliverables Concrete artefacts the client receives.
- * @property {string} icon        Lookup key for an icon component. See `socials.js`.
- * @property {string} [startingAt] Optional price anchor, e.g. 'From $X'.
- *   Leave empty to keep pricing to conversations.
+ * @property {string} cta          Button label. Phrased as the client's next
+ *   step, not as a command.
  */
 
-/**
- * Generic starter set — edit to match what you actually offer.
- *
- * Kept deliberately broad rather than invented: these are common web
- * engagements, not claims about your specific practice. Three or four focused
- * services read as expertise; ten read as a freelancer who will take anything.
- *
- * @type {Service[]}
- */
+/** @type {Service[]} */
 export const SERVICES = [
   {
-    id: 'web-design',
-    title: 'Web Design',
-    description:
-      'Interface and interaction design for marketing sites and product surfaces, delivered as a system rather than a set of one-off screens.',
-    deliverables: ['Design system', 'Responsive layouts', 'Prototype'],
-    icon: 'palette',
-    startingAt: '',
-  },
-  {
-    id: 'development',
+    id: 'frontend',
+    icon: 'frontend',
     title: 'Frontend Development',
     description:
-      'Production frontends built for maintenance as much as launch — typed contracts, accessible markup, and a measured performance budget.',
-    deliverables: ['Component library', 'Responsive build', 'CMS integration'],
-    icon: 'code',
-    startingAt: '',
+      'Interfaces built component-first in React, with state that stays predictable as features are added. Accessible markup and keyboard paths are part of the build, not a later pass.',
+    deliverables: ['Component library', 'Accessible markup', 'Documented patterns'],
+    cta: 'Discuss a build',
   },
   {
-    id: 'motion',
-    title: 'Motion & Interaction',
+    id: 'full-stack',
+    icon: 'fullstack',
+    title: 'Full Stack Web Development',
     description:
-      'Scroll-driven sequences, page transitions, and micro-interactions that stay smooth on mid-range hardware and respect reduced-motion preferences.',
-    deliverables: ['Motion spec', 'Animation implementation', 'Performance audit'],
-    icon: 'sparkles',
-    startingAt: '',
+      'End-to-end delivery: interface, API contract, data model and deployment. Owning both sides means the shape of the data suits the interface instead of the interface working around it.',
+    deliverables: ['API integration', 'Data modelling', 'Deployment pipeline'],
+    cta: 'Scope a project',
+  },
+  {
+    id: 'responsive',
+    icon: 'responsive',
+    title: 'Responsive Website Development',
+    description:
+      // Plain text — these strings render as-is, so no markdown emphasis.
+      'Layouts that hold up between breakpoints, not only at them. Fluid type and spacing, tested on real viewport sizes rather than the three in the design file.',
+    deliverables: ['Fluid layout system', 'Cross-device testing', 'Mobile-first build'],
+    cta: 'Get a quote',
+  },
+  {
+    id: 'figma-to-code',
+    icon: 'handoff',
+    title: 'UI Implementation from Figma',
+    description:
+      'Pixel-accurate translation of a design file into working code — including the states the file does not show: empty, loading, error, and everything between the two artboards.',
+    deliverables: ['Faithful implementation', 'All interaction states', 'Design QA pass'],
+    cta: 'Send me a file',
   },
   {
     id: 'performance',
-    title: 'Performance & Accessibility',
-    description:
-      'Audit and remediation for Core Web Vitals and WCAG compliance, with the findings documented so the gains do not regress after handover.',
-    deliverables: ['Audit report', 'Prioritised fixes', 'Implementation'],
     icon: 'gauge',
-    startingAt: '',
-  },
-]
-
-/**
- * The process shown alongside services — sets expectations before a first call.
- *
- * @typedef {object} ProcessStep
- * @property {string} id
- * @property {string} step    Zero-padded index, for display ('01').
- * @property {string} title
- * @property {string} description
- */
-
-/** @type {ProcessStep[]} */
-export const PROCESS = [
-  {
-    id: 'discover',
-    step: '01',
-    title: 'Discover',
-    description: 'Goals, audience, and constraints — before anything is designed.',
+    title: 'Website Performance Optimization',
+    description:
+      'Audit and remediation against Core Web Vitals — bundle size, image delivery, render-blocking resources, layout shift. Findings documented so the gains survive the next release.',
+    deliverables: ['Performance audit', 'Prioritised fixes', 'Before/after report'],
+    cta: 'Request an audit',
   },
   {
-    id: 'design',
-    step: '02',
-    title: 'Design',
-    description: 'Direction, then a system: type, colour, spacing, and motion.',
-  },
-  {
-    id: 'build',
-    step: '03',
-    title: 'Build',
-    description: 'Accessible, performant implementation with staged review.',
-  },
-  {
-    id: 'launch',
-    step: '04',
-    title: 'Launch',
-    description: 'Deploy, measure, hand over documentation.',
+    id: 'maintenance',
+    icon: 'maintain',
+    title: 'Website Maintenance',
+    description:
+      'Ongoing care once a site is live: dependency updates, security patches, content changes and small features. The unglamorous work that decides whether a site still works in two years.',
+    deliverables: ['Dependency updates', 'Bug fixes', 'Content changes'],
+    cta: 'Talk about support',
   },
 ]
