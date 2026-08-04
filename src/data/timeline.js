@@ -54,14 +54,6 @@ export const JOURNEY = [
     icon: 'layers',
   },
   {
-    id: 'ev-charger-finder',
-    year: '20XX',
-    title: 'Worked on EV Charger Finder',
-    description:
-      'Built a location-driven interface with live data and map interaction. First real lesson in handling async state and empty, loading and error cases properly.',
-    icon: 'zap',
-  },
-  {
     id: 'construction-website',
     year: '20XX',
     title: 'Built Construction Website',

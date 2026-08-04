@@ -16,14 +16,14 @@
  * both render a designed placeholder rather than a broken image. When you have
  * them, IMPORT rather than writing a string path:
  *
- *   import evCover from '@/assets/images/ev-charger-cover.jpg'
+ *   import cover from '@/assets/images/construction-cover.jpg'
  *   …
- *   thumbnail: evCover,
+ *   thumbnail: cover,
  *
  * Vite then fingerprints and optimises the file, and a typo fails the *build*
  * instead of shipping a broken <img> to production.
  *
- * ⚠️ PLACEHOLDER COPY. The five project names are yours; everything written
+ * ⚠️ PLACEHOLDER COPY. The project names are yours; everything written
  * about them is generic scaffolding shaped to the project type, so the layout
  * can be judged with realistic line lengths. `status` values are guesses.
  * No metrics are invented anywhere — `results` is qualitative on purpose.
@@ -72,72 +72,6 @@ export const PROJECT_STATUS = {
 
 /** @type {Project[]} */
 export const PROJECTS = [
-  {
-    id: 'ev-charger-finder',
-    slug: 'ev-charger-finder',
-    title: 'EV Charger Finder',
-    category: 'Full Stack Web App',
-    filters: ['web-apps', 'full-stack'],
-    year: 2025,
-    status: 'live',
-    shortDescription:
-      'A location-aware app for finding nearby EV charging points, with live availability and filtering by connector type and speed.',
-    longDescription:
-      'A map-first interface for drivers who need a charger now, not a directory of every charger that exists. The whole design question was how to get someone from opening the app to a decision in as few taps as possible.',
-    problem:
-      'Charger data is scattered across networks, and most tools present it as an undifferentiated list. A driver with 8% battery does not need every option — they need the nearest one that works with their car and is free right now.',
-    solution:
-      'A map as the primary surface, with filters that narrow by connector and speed before anything renders. Availability is fetched per viewport rather than up front, so the first paint is fast and the data stays current as the map moves.',
-    technologies: ['React', 'Next.js', 'Node.js', 'MongoDB', 'Tailwind CSS'],
-    features: [
-      {
-        title: 'Map-first discovery',
-        description: 'Chargers plotted by proximity, clustered at low zoom so dense cities stay readable.',
-      },
-      {
-        title: 'Connector and speed filters',
-        description: 'Narrow to what your vehicle can actually use before the results render.',
-      },
-      {
-        title: 'Live availability',
-        description: 'Status fetched per viewport, so it reflects the area being looked at rather than the whole dataset.',
-      },
-      {
-        title: 'Saved locations',
-        description: 'Frequently used chargers kept one tap away.',
-      },
-    ],
-    challenges: [
-      {
-        challenge:
-          'Fetching availability for every charger on load was slow and mostly wasted — a user sees a fraction of the map.',
-        solution:
-          'Moved to viewport-scoped requests with debounced map events, so data is only fetched for what is actually on screen.',
-      },
-      {
-        challenge:
-          'Hundreds of overlapping markers made dense areas unusable at city zoom levels.',
-        solution:
-          'Added clustering with counts, so density is communicated at a glance and individual markers appear as the user zooms in.',
-      },
-    ],
-    process: [
-      { step: '01', title: 'Research', description: 'Mapped the decision a driver actually makes, and what blocks it.' },
-      { step: '02', title: 'Data model', description: 'Normalised charger records from multiple shapes into one contract.' },
-      { step: '03', title: 'Build', description: 'Map surface first, then filters, then availability layered on top.' },
-      { step: '04', title: 'Refine', description: 'Tuned clustering thresholds and the empty, loading and error states.' },
-    ],
-    results: [
-      'Charger lookup reduced to a single screen with no navigation',
-      'Availability stays current without re-fetching the full dataset',
-      'Empty, loading and error states designed rather than defaulted',
-    ],
-    thumbnail: null,
-    gallery: [],
-    githubUrl: '',
-    liveUrl: '',
-    featured: true,
-  },
   {
     id: 'construction-website',
     slug: 'construction-website',
