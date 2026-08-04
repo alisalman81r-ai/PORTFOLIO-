@@ -405,6 +405,30 @@
   mask-composite: exclude;
 }
 
+/**
+ * Raw conic sweep — the gradient behind an animated border.
+ *
+ * Unlike `ring-conic`, this carries no mask: it is meant to be spun inside an
+ * `overflow-hidden` rounded container, which clips it to the border. That
+ * indirection exists because a conic gradient's *angle* cannot be animated
+ * without registering a custom property, whereas rotating the element that
+ * paints it costs nothing and runs on the compositor.
+ *
+ * Spinning the element directly would rotate the rounded rectangle itself;
+ * clipping is what keeps the frame still while the light travels around it.
+ */
+@utility conic-sweep {
+  background-image: conic-gradient(
+    from 0deg,
+    transparent 0%,
+    var(--accent) 14%,
+    transparent 32%,
+    transparent 58%,
+    var(--accent-alt) 74%,
+    transparent 92%
+  );
+}
+
 /* ══════════════════════════════════════════════════════════════════════
    TEXT MASKING
    ══════════════════════════════════════════════════════════════════════ */

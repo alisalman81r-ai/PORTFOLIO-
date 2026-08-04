@@ -19,6 +19,12 @@
 /* Identity */
 export { Logo } from './Logo'
 
+/* Content primitives */
+export { Icon } from './Icon'
+export { Tag } from './Tag'
+export { ImageFrame } from './ImageFrame'
+export { GlowBorder } from './GlowBorder'
+
 /* Interaction */
 export { MagneticButton } from './MagneticButton'
 export { TiltCard } from './TiltCard'

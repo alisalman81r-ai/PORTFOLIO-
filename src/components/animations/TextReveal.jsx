@@ -1,6 +1,6 @@
 import { motion } from 'motion/react'
 
-import { DURATION, EASE, STAGGER } from '@/animations'
+import { DURATION, EASE, STAGGER, VIEWPORT } from '@/animations'
 import { cn } from '@/utils'
 
 /**
@@ -35,6 +35,10 @@ import { cn } from '@/utils'
  * @param {number} [props.stagger=STAGGER.tight] Seconds between words.
  * @param {boolean} [props.animate=true] Set false to defer to a parent's
  *   variant propagation instead of animating on mount.
+ * @param {boolean} [props.inView=false] Trigger on scroll into view instead of
+ *   on mount. Required for any heading below the fold — mount-triggered text
+ *   finishes revealing long before the user reaches it, so they only ever see
+ *   the end state.
  * @param {string} [props.className]
  * @param {string} [props.wordClassName] Applied to each word — for per-word
  *   gradients or colour.
@@ -51,6 +55,7 @@ export function TextReveal({
   delay = 0,
   stagger = STAGGER.tight,
   animate = true,
+  inView = false,
   className,
   wordClassName,
   ...rest
@@ -79,7 +84,10 @@ export function TextReveal({
       aria-label={text}
       className={cn('inline', className)}
       variants={container}
-      {...(animate && { initial: 'hidden', animate: 'visible' })}
+      {...(animate &&
+        (inView
+          ? { initial: 'hidden', whileInView: 'visible', viewport: { ...VIEWPORT, once: true } }
+          : { initial: 'hidden', animate: 'visible' }))}
       {...rest}
     >
       {words.map((item, index) => (

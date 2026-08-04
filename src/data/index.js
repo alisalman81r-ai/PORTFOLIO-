@@ -25,6 +25,8 @@
 export { SITE } from './site'
 export { PERSONAL } from './personal'
 export { HERO } from './hero'
+export { ABOUT } from './about'
+export { JOURNEY } from './timeline'
 export { NAV_LINKS, FOOTER_LINKS, SECTION_IDS } from './navigation'
 export { SOCIAL_LINKS } from './socials'
 export { SKILL_CATEGORIES, ALL_SKILLS } from './skills'

@@ -1,4 +1,4 @@
-import { Hero } from '@/sections'
+import { About, Hero } from '@/sections'
 
 /**
  * Home route.
@@ -18,8 +18,8 @@ export default function Home() {
   return (
     <>
       <Hero />
+      <About />
 
-      {/* <About />        id="about"        */}
       {/* <Skills />       id="skills"       */}
       {/* <Projects />     id="projects"     */}
       {/* <Services />     id="services"     */}
