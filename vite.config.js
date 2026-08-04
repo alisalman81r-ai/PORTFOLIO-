@@ -26,7 +26,10 @@ export default defineConfig({
 
   server: {
     port: 3000,
-    open: true,
+    // Deliberately not auto-opening a browser. `open: true` launches the OS
+    // default (Edge on Windows), which is rarely the browser you develop in.
+    // Set it to `true` — or to a browser name, e.g. 'chrome' — if you want it.
+    open: false,
   },
 
   preview: {
