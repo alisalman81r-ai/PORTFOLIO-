@@ -1,12 +1,12 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
-import { RootLayout } from '@/layouts'
+import { MainLayout } from '@/layouts'
 import { Home, NotFound } from '@/pages'
 
 /**
  * Route table.
  *
- * Every route nests under `RootLayout`, so smooth scrolling, scroll reset, and
+ * Every route nests under `MainLayout`, so smooth scrolling, scroll reset, and
  * page transitions apply uniformly — a sibling top-level route would silently
  * opt out of all three.
  *
@@ -18,7 +18,7 @@ import { Home, NotFound } from '@/pages'
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <RootLayout />,
+    element: <MainLayout />,
     children: [
       { index: true, element: <Home /> },
       { path: '*', element: <NotFound /> },

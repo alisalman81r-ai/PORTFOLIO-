@@ -1,0 +1,347 @@
+/**
+ * COMPONENT CLASSES
+ * =================
+ *
+ * Multi-part visual patterns: buttons, cards, headings, eyebrows.
+ *
+ * THE VARIABLE PATTERN
+ * --------------------
+ * Every family follows the same shape:
+ *
+ *   .btn          declares CSS variables with defaults, then consumes them
+ *   .btn-primary  re-declares ONLY the variables (colour)
+ *   .btn-lg       re-declares ONLY the variables (size)
+ *
+ * The base class is the only one that writes real properties. Variants set
+ * variables, so `btn btn-primary btn-lg` composes cleanly — no property is
+ * declared twice and no variant has to out-specify another.
+ *
+ * The naive alternative (each variant re-declaring `background-color`,
+ * `padding`, …) makes correctness depend on stylesheet source order, which is
+ * exactly the fragility that leads to `!important` creeping into a codebase.
+ *
+ * These are styles, not components. A `<Button>` React component will wrap
+ * `.btn` and add behaviour (loading state, `as` polymorphism, icon slots) —
+ * the CSS stays usable on a bare `<a>` for cases that don't need it.
+ */
+
+/* ══════════════════════════════════════════════════════════════════════
+   BUTTONS
+   ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * Base button. Structure, geometry, and interaction only — no colour identity
+ * of its own beyond a neutral default.
+ *
+ * `inline-flex` + `align-items: center` so an icon and its label sit on a
+ * shared optical baseline regardless of glyph height.
+ */
+@utility btn {
+  /* Colour — overridden by variant classes */
+  --btn-bg: transparent;
+  --btn-bg-hover: transparent;
+  --btn-ink: var(--ink);
+  --btn-ink-hover: var(--ink);
+  --btn-border: transparent;
+  --btn-border-hover: transparent;
+
+  /* Geometry — overridden by size classes */
+  --btn-px: 1.5rem;
+  --btn-py: 0.875rem;
+  --btn-text: 0.9375rem;
+  --btn-radius: var(--radius-pill);
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+
+  padding-inline: var(--btn-px);
+  padding-block: var(--btn-py);
+  border: 1px solid var(--btn-border);
+  border-radius: var(--btn-radius);
+
+  background-color: var(--btn-bg);
+  color: var(--btn-ink);
+
+  font-family: var(--font-sans);
+  font-size: var(--btn-text);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+  text-align: center;
+
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+
+  transition:
+    background-color var(--duration-fast) var(--ease-out-quart),
+    border-color var(--duration-fast) var(--ease-out-quart),
+    color var(--duration-fast) var(--ease-out-quart),
+    transform var(--duration-fast) var(--ease-out-quart),
+    opacity var(--duration-fast) var(--ease-out-quart);
+
+  @media (hover: hover) {
+    &:hover:not(:disabled, [aria-disabled='true']) {
+      background-color: var(--btn-bg-hover);
+      border-color: var(--btn-border-hover);
+      color: var(--btn-ink-hover);
+    }
+  }
+
+  /* Tactile press. Scale rather than translate so it reads as depth. */
+  &:active:not(:disabled, [aria-disabled='true']) {
+    transform: scale(0.975);
+  }
+
+  /* `aria-disabled` as well as `disabled`: a disabled <button> is removed from
+     the tab order and announces nothing, so links and async actions should use
+     the ARIA form and stay focusable. */
+  &:disabled,
+  &[aria-disabled='true'] {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+}
+
+/** Primary action. One per view — more than one means none is primary. */
+@utility btn-primary {
+  --btn-bg: var(--accent);
+  --btn-bg-hover: var(--accent-hover);
+  --btn-ink: var(--accent-ink);
+  --btn-ink-hover: var(--accent-ink);
+  --btn-border: var(--accent);
+  --btn-border-hover: var(--accent-hover);
+}
+
+/** Secondary action. Filled, neutral — pairs beside a primary. */
+@utility btn-secondary {
+  --btn-bg: var(--elevated);
+  --btn-bg-hover: var(--surface);
+  --btn-ink: var(--ink);
+  --btn-ink-hover: var(--ink);
+  --btn-border: var(--line);
+  --btn-border-hover: var(--line-strong);
+}
+
+/** Outline. For tertiary actions that still need a visible target. */
+@utility btn-outline {
+  --btn-bg: transparent;
+  --btn-bg-hover: var(--accent-soft);
+  --btn-ink: var(--ink);
+  --btn-ink-hover: var(--ink);
+  --btn-border: var(--line-strong);
+  --btn-border-hover: var(--accent);
+}
+
+/** Ghost. Lowest emphasis — toolbar and inline actions. */
+@utility btn-ghost {
+  --btn-bg: transparent;
+  --btn-bg-hover: var(--elevated);
+  --btn-ink: var(--muted);
+  --btn-ink-hover: var(--ink);
+}
+
+/* ── Sizes ─────────────────────────────────────────────────────────── */
+
+@utility btn-sm {
+  --btn-px: 1rem;
+  --btn-py: 0.5625rem;
+  --btn-text: 0.875rem;
+}
+
+@utility btn-lg {
+  --btn-px: 2rem;
+  --btn-py: 1.125rem;
+  --btn-text: 1rem;
+}
+
+/**
+ * Square icon-only button.
+ *
+ * An icon-only control has no accessible name, so it MUST carry an
+ * `aria-label`. The 44px floor is the WCAG 2.5.8 minimum target size.
+ */
+@utility btn-icon {
+  --btn-px: 0;
+  --btn-py: 0;
+
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  flex-shrink: 0;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   CARDS
+   ══════════════════════════════════════════════════════════════════════ */
+
+/** Base surface. Same variable pattern as buttons. */
+@utility card {
+  --card-bg: var(--surface);
+  --card-border: var(--line);
+  --card-radius: var(--radius-card);
+  --card-pad: 1.5rem;
+
+  position: relative;
+  padding: var(--card-pad);
+  border: 1px solid var(--card-border);
+  border-radius: var(--card-radius);
+  background-color: var(--card-bg);
+}
+
+/** Frosted card. See the cost note on `.glass` in `utilities.css`. */
+@utility card-glass {
+  --card-bg: var(--glass-bg);
+  --card-border: var(--glass-line);
+
+  backdrop-filter: blur(var(--blur-glass)) saturate(1.6);
+  -webkit-backdrop-filter: blur(var(--blur-glass)) saturate(1.6);
+}
+
+/**
+ * Clickable card.
+ *
+ * Note the focus-within ring: the correct markup for a linked card is a plain
+ * card containing a real `<a>` stretched over it with `::after`, not a `<div>`
+ * with an onClick. This makes the whole card show a focus ring when that inner
+ * link is focused, so keyboard users see the same affordance as mouse users.
+ */
+@utility card-interactive {
+  --card-bg-hover: var(--elevated);
+  --card-border-hover: var(--line-strong);
+
+  cursor: pointer;
+  transition:
+    background-color var(--duration-base) var(--ease-out-quart),
+    border-color var(--duration-base) var(--ease-out-quart),
+    transform var(--duration-base) var(--ease-out-expo);
+
+  @media (hover: hover) {
+    &:hover {
+      background-color: var(--card-bg-hover);
+      border-color: var(--card-border-hover);
+      transform: translate3d(0, -0.25rem, 0);
+    }
+  }
+
+  &:focus-within {
+    outline: 2px solid var(--ring);
+    outline-offset: 3px;
+  }
+}
+
+/** Media card — image runs to the edges, so the padding is removed. */
+@utility card-flush {
+  --card-pad: 0;
+
+  overflow: hidden;
+}
+
+/** Larger, softer panel for feature blocks. */
+@utility card-panel {
+  --card-radius: var(--radius-panel);
+  --card-pad: clamp(1.5rem, 4vw, 3rem);
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   TYPOGRAPHY
+   ══════════════════════════════════════════════════════════════════════
+
+   Semantic type classes, so a heading's *look* is decoupled from its
+   *level*. An `<h2>` that needs to look like the biggest thing on the page
+   gets `.heading-xl` without breaking the document outline — page structure
+   stays driven by h1→h6 order, which is what screen-reader users navigate by.
+
+   Each pulls its size, line-height, and tracking from the tokens in
+   `theme.css`, so the scale is defined exactly once. */
+
+@utility heading-2xl {
+  font-family: var(--font-display);
+  font-size: var(--text-display-2xl);
+  line-height: var(--text-display-2xl--line-height);
+  letter-spacing: var(--text-display-2xl--letter-spacing);
+  font-weight: 500;
+  text-wrap: balance;
+}
+
+@utility heading-xl {
+  font-family: var(--font-display);
+  font-size: var(--text-display-xl);
+  line-height: var(--text-display-xl--line-height);
+  letter-spacing: var(--text-display-xl--letter-spacing);
+  font-weight: 500;
+  text-wrap: balance;
+}
+
+@utility heading-lg {
+  font-family: var(--font-display);
+  font-size: var(--text-display-lg);
+  line-height: var(--text-display-lg--line-height);
+  letter-spacing: var(--text-display-lg--letter-spacing);
+  font-weight: 500;
+  text-wrap: balance;
+}
+
+@utility heading-md {
+  font-family: var(--font-display);
+  font-size: var(--text-display);
+  line-height: var(--text-display--line-height);
+  letter-spacing: var(--text-display--letter-spacing);
+  font-weight: 500;
+  text-wrap: balance;
+}
+
+@utility heading-sm {
+  font-family: var(--font-display);
+  font-size: var(--text-display-sm);
+  line-height: var(--text-display-sm--line-height);
+  letter-spacing: var(--text-display-sm--letter-spacing);
+  font-weight: 500;
+  text-wrap: balance;
+}
+
+@utility heading-xs {
+  font-family: var(--font-display);
+  font-size: var(--text-display-xs);
+  line-height: var(--text-display-xs--line-height);
+  letter-spacing: var(--text-display-xs--letter-spacing);
+  font-weight: 500;
+  text-wrap: balance;
+}
+
+/**
+ * Eyebrow / kicker — the small tracked-out label above a heading.
+ *
+ * Monospace and wide tracking read as "system metadata", which is what makes
+ * section labels feel deliberate rather than decorative.
+ */
+@utility eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  font-family: var(--font-mono);
+  font-size: var(--text-eyebrow);
+  line-height: 1;
+  letter-spacing: var(--tracking-wider-caps);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/** Lead paragraph — the intro sentence under a section heading. */
+@utility lead {
+  font-size: var(--text-body-lg);
+  line-height: var(--text-body-lg--line-height);
+  color: var(--muted);
+  text-wrap: pretty;
+}
+
+/** Editorial serif accent, for emphasised words inside a display heading. */
+@utility accent-serif {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 0;
+}

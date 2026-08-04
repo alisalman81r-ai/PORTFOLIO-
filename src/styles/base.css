@@ -1,44 +1,82 @@
 /**
- * Base layer — element defaults on top of Tailwind's preflight.
+ * BASE LAYER
+ * ==========
  *
- * Everything here is unconditional and global. Anything that needs a class
- * belongs in `utilities.css`; anything visual belongs in a component.
+ * Element-level defaults layered on top of Tailwind's preflight reset.
+ * Everything here applies globally without a class.
+ *
+ * The bar for adding a rule here is high: it must be true for *every* instance
+ * of that element across the whole site. Anything conditional belongs in
+ * `utilities.css`; anything with variants belongs in `components.css`.
  */
 
 @layer base {
   html {
-    /* Lenis drives scrolling; native smooth scroll would fight it.
-       `scroll-smooth` stays on <html> as the no-JS / reduced-motion fallback,
-       and SmoothScroll removes it once Lenis takes over. */
+    /* Lenis owns scrolling; native smooth scroll would fight its programmatic
+       scrollTo. This class stays as the no-JS fallback and is removed by
+       SmoothScroll once Lenis takes over. */
     -webkit-text-size-adjust: 100%;
+
+    /* Reserve the scrollbar track permanently so opening a modal (which locks
+       scrolling) doesn't shift the entire layout sideways. */
     scrollbar-gutter: stable;
   }
 
   body {
     background-color: var(--canvas);
     color: var(--ink);
-    font-family: theme(--font-sans);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+
+    /* Never let the browser fake a bold or italic by mathematically slanting
+       or smearing a glyph — with variable fonts, real weights always exist. */
     font-synthesis-weight: none;
+
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     -webkit-tap-highlight-color: transparent;
 
-    /* Colour + background transition on theme flip, nothing else. */
-    transition: background-color 500ms theme(--ease-out-quart),
-      color 500ms theme(--ease-out-quart);
+    /* Only colour transitions on a theme flip. Transitioning `all` here would
+       animate every layout property of every element on the page. */
+    transition:
+      background-color var(--duration-slow) var(--ease-out-quart),
+      color var(--duration-slow) var(--ease-out-quart);
   }
 
+  /* Headings default to the display face and balanced wrapping. Size is NOT
+     set here — that comes from a `heading-*` class, so an <h2> can look like
+     any step in the scale without breaking the document outline. */
   h1,
   h2,
   h3,
-  h4 {
-    font-family: theme(--font-display);
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    letter-spacing: var(--tracking-display);
     text-wrap: balance;
   }
 
+  /* `pretty` prevents orphans — a single word stranded on the last line. */
   p {
     text-wrap: pretty;
+  }
+
+  code,
+  kbd,
+  pre,
+  samp {
+    font-family: var(--font-mono);
+  }
+
+  /* Tabular figures so numbers in tables and counters don't jitter as they
+     change — proportional digits have different widths. */
+  th,
+  td {
+    font-variant-numeric: tabular-nums;
   }
 
   ::selection {
@@ -46,14 +84,20 @@
     color: var(--selection-ink);
   }
 
-  /* Visible focus for keyboard users only — never on mouse click. */
+  /**
+   * Focus ring for keyboard users only.
+   *
+   * `:focus-visible` (not `:focus`) is the important part: it shows the ring
+   * for keyboard navigation but not on mouse click, so we get accessibility
+   * without the visual noise that leads people to disable outlines entirely.
+   */
   :focus-visible {
     outline: 2px solid var(--ring);
     outline-offset: 3px;
     border-radius: 2px;
   }
 
-  /* Media should never overflow its container. */
+  /* Media should never break its container. */
   img,
   video,
   canvas,
@@ -62,18 +106,34 @@
     max-width: 100%;
   }
 
-  /* Anchor targets clear a sticky header. */
-  :target {
-    scroll-margin-block-start: 6rem;
+  /* Images carry their own aspect ratio until loaded, preventing layout shift. */
+  img,
+  video {
+    height: auto;
   }
 
-  /* Firefox */
+  /* Anchor targets clear the fixed header instead of landing under it. */
+  :target {
+    scroll-margin-block-start: calc(var(--spacing-header) + 2rem);
+  }
+
+  /* Inputs don't inherit font by default in every browser. */
+  input,
+  textarea,
+  select,
+  button {
+    font: inherit;
+    color: inherit;
+  }
+
+  /* Scrollbar — Firefox */
   * {
     scrollbar-color: var(--line-strong) transparent;
     scrollbar-width: thin;
   }
 
-  /* WebKit */
+  /* Scrollbar — WebKit. `background-clip: content-box` with a transparent
+     border is what creates the inset, floating-thumb look. */
   ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
@@ -86,17 +146,27 @@
   ::-webkit-scrollbar-thumb {
     background-color: var(--line-strong);
     border: 3px solid transparent;
-    border-radius: 9999px;
+    border-radius: var(--radius-pill);
     background-clip: content-box;
   }
 }
 
 /**
- * Reduced motion.
+ * REDUCED MOTION
+ * ==============
  *
- * This is a hard global kill-switch for users who ask for it. JS-driven
- * animation is handled separately: `usePrefersReducedMotion()` and Motion's
- * <MotionConfig reducedMotion="user"> cover Motion/GSAP, which CSS cannot reach.
+ * A global kill-switch for users who have asked their OS to minimise motion —
+ * for people with vestibular disorders, animation can cause genuine nausea.
+ *
+ * This handles CSS only. JS-driven animation needs separate treatment, which
+ * is why the same preference is honoured in three more places:
+ *
+ *   - <MotionConfig reducedMotion="user">  in `context/AppProviders.jsx`
+ *   - usePrefersReducedMotion()            gates GSAP timelines
+ *   - SmoothScroll                         drops Lenis to native scrolling
+ *
+ * Durations are near-zero rather than `none` so that `transitionend` and
+ * `animationend` listeners still fire and state machines don't stall.
  */
 @media (prefers-reduced-motion: reduce) {
   html {

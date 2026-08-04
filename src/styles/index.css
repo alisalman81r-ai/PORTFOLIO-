@@ -1,15 +1,20 @@
 /**
- * Global stylesheet entry point.
+ * GLOBAL STYLESHEET ENTRY
+ * =======================
  *
- * Import order matters — Tailwind v4 resolves these `@import` rules itself and
- * flattens them into a single pass, so every file below can use `@theme`,
- * `@utility`, `@layer`, and `theme()`.
+ * Import order is the cascade. Tailwind v4 resolves these `@import` rules
+ * itself and flattens them into a single pass, so every file below can use
+ * `@theme`, `@utility`, `@layer`, and `var()` from the tokens.
  *
- *   1. tailwindcss  — preflight + engine
- *   2. fonts        — @font-face declarations (must load before anything uses them)
- *   3. theme        — design tokens (colors, type scale, easings, radii)
- *   4. base         — element-level defaults Tailwind's preflight does not cover
- *   5. utilities    — project-specific utilities
+ *   1. tailwindcss   Engine + preflight reset
+ *   2. fonts         @font-face — must be registered before anything uses them
+ *   3. theme         Design tokens (the vocabulary)
+ *   4. base          Element defaults (the foundation)
+ *   5. utilities     Single-purpose classes (the tools)
+ *   6. components    Multi-part patterns (the parts)
+ *
+ * Tokens before everything that consumes them; utilities before components so
+ * that a component class can be overridden by a utility at the call site.
  */
 @import 'tailwindcss';
 
@@ -17,17 +22,22 @@
 @import './theme.css';
 @import './base.css';
 @import './utilities.css';
+@import './components.css';
 
-/*
- * Tailwind v4 scans source files automatically, but the alias-based imports and
- * any future content outside `src` need to be declared explicitly.
+/**
+ * Tell Tailwind where to scan for class names. It infers this from the project
+ * root by default; declaring it explicitly keeps detection correct as the app
+ * grows and avoids surprises with alias-based imports.
  */
 @source '../../index.html';
 @source '../';
 
-/*
- * Dark mode is driven by `data-theme` on <html>, not by the OS media query
- * alone, so the in-app theme toggle can override the system preference.
- * The pre-paint script in index.html sets this attribute before first paint.
+/**
+ * Dark mode is driven by `data-theme` on <html>, not by `prefers-color-scheme`
+ * alone, so the in-app toggle can override the OS preference. The pre-paint
+ * script in `index.html` sets the attribute before first paint.
+ *
+ * `:where()` keeps the variant at zero specificity, so `dark:` utilities stay
+ * as easy to override as their light-mode counterparts.
  */
 @custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));

@@ -1,142 +1,439 @@
 /**
- * Design tokens.
+ * DESIGN TOKENS
+ * =============
  *
- * Two-layer system:
+ * The single source of truth for every visual decision in the app. Nothing here
+ * describes a component — only the raw vocabulary components are built from.
  *
- *   1. Raw palette + semantic CSS variables on `:root` / `[data-theme]`.
- *      These are plain CSS custom properties, so they can flip at runtime.
- *   2. `@theme inline` maps the semantic variables into Tailwind's namespaces.
- *      `inline` is the important part — it makes `bg-canvas` compile to
- *      `background-color: var(--canvas)` rather than baking in a literal colour,
- *      which is what lets a single attribute swap re-theme the whole app.
+ * Three layers, in order:
  *
- * Add a colour here, never in a component.
+ *   1. PRIMITIVES   Raw palette scales (`--neutral-*`, `--brand-*`). Named by
+ *                   what they *are*. Never referenced by a component.
+ *   2. SEMANTICS    Role-based aliases (`--canvas`, `--ink`, `--accent`). Named
+ *                   by what they're *for*. These are what re-point per theme.
+ *   3. TAILWIND MAP `@theme` blocks that expose the semantics as utilities.
+ *
+ * Why the indirection: a component asks for `bg-surface`, not `bg-neutral-900`.
+ * Re-skinning the site then means editing layer 2 only — every component
+ * follows automatically, and a theme swap is a single attribute change.
+ *
+ * RULE: never write a raw colour in a component. If a value is missing here,
+ * add it here.
  */
 
-/* ------------------------------------------------------------------ */
-/* Semantic variables                                                  */
-/* ------------------------------------------------------------------ */
+/* ══════════════════════════════════════════════════════════════════════
+   1. PRIMITIVES — raw scales
+   ══════════════════════════════════════════════════════════════════════
+
+   Declared in oklch: perceptually uniform, so equal lightness steps *look*
+   equally spaced (unlike hex/hsl), and it reaches colours outside sRGB on
+   modern displays. Every scale shares one hue so the neutrals feel related
+   to the brand rather than muddy-grey. */
+
+:root {
+  /* Neutrals — cool-leaning, hue 285. 0 = white, 1000 = near-black. */
+  --neutral-0: oklch(1 0 0);
+  --neutral-50: oklch(0.985 0.002 285);
+  --neutral-100: oklch(0.97 0.003 285);
+  --neutral-200: oklch(0.922 0.004 285);
+  --neutral-300: oklch(0.87 0.005 285);
+  --neutral-400: oklch(0.72 0.008 285);
+  --neutral-500: oklch(0.6 0.01 285);
+  --neutral-600: oklch(0.5 0.011 285);
+  --neutral-700: oklch(0.37 0.009 285);
+  --neutral-800: oklch(0.27 0.008 285);
+  --neutral-900: oklch(0.2 0.007 285);
+  --neutral-950: oklch(0.16 0.006 285);
+  --neutral-1000: oklch(0.11 0.005 285);
+
+  /* Brand — warm gold, hue 78. Swap this hue to re-brand the entire site. */
+  --brand-200: oklch(0.93 0.08 78);
+  --brand-300: oklch(0.88 0.12 78);
+  --brand-400: oklch(0.83 0.15 78);
+  --brand-500: oklch(0.78 0.17 78);
+  --brand-600: oklch(0.7 0.16 78);
+  --brand-700: oklch(0.62 0.15 78);
+
+  /* Feedback hues — only ever used for state, never decoration. */
+  --green-500: oklch(0.75 0.16 155);
+  --amber-500: oklch(0.8 0.15 85);
+  --red-500: oklch(0.66 0.21 25);
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   2. SEMANTICS — role aliases, re-pointed per theme
+   ══════════════════════════════════════════════════════════════════════ */
 
 :root,
 [data-theme='dark'] {
   color-scheme: dark;
 
-  /* Surfaces — canvas is the page, surface/elevated stack above it */
-  --canvas: oklch(0.16 0.006 285);
-  --surface: oklch(0.2 0.007 285);
-  --elevated: oklch(0.25 0.008 285);
+  /* Surfaces, from furthest back to closest to the viewer. */
+  --sunken: var(--neutral-1000);
+  --canvas: var(--neutral-950);
+  --surface: var(--neutral-900);
+  --elevated: var(--neutral-800);
 
-  /* Content — ink is primary text, muted is secondary, faint is tertiary */
-  --ink: oklch(0.97 0.003 285);
-  --muted: oklch(0.72 0.008 285);
-  --faint: oklch(0.55 0.01 285);
+  /* Content, in descending emphasis. `inverse` is text on an accent fill. */
+  --ink: var(--neutral-50);
+  --muted: var(--neutral-400);
+  --faint: var(--neutral-500);
+  --inverse: var(--neutral-950);
 
-  /* Lines */
+  /* Borders. Alpha rather than solid so they read correctly on any surface. */
   --line: oklch(1 0 0 / 0.1);
-  --line-strong: oklch(1 0 0 / 0.18);
+  --line-strong: oklch(1 0 0 / 0.2);
 
-  /* Brand accent */
-  --accent: oklch(0.78 0.17 78);
-  --accent-ink: oklch(0.18 0.03 78);
+  /* Accent set. `soft` is the low-emphasis tint for chips and hover fills. */
+  --accent: var(--brand-500);
+  --accent-hover: var(--brand-400);
+  --accent-soft: oklch(0.78 0.17 78 / 0.14);
+  --accent-ink: var(--neutral-950);
 
-  /* Feedback */
-  --positive: oklch(0.75 0.16 155);
-  --negative: oklch(0.66 0.21 25);
+  /* State */
+  --positive: var(--green-500);
+  --warning: var(--amber-500);
+  --negative: var(--red-500);
 
-  /* Selection + focus */
+  /* Scrim behind modals and the mobile nav. */
+  --scrim: oklch(0.11 0.005 285 / 0.72);
+
+  /* Glass: the fill and edge used by the `.glass` utilities. */
+  --glass-bg: oklch(1 0 0 / 0.06);
+  --glass-line: oklch(1 0 0 / 0.12);
+
+  /* Gradient stops for `.text-gradient` and decorative fills. */
+  --grad-from: var(--neutral-50);
+  --grad-to: var(--brand-500);
+
+  /* Focus ring */
+  --ring: var(--accent);
+
+  /* Selection */
   --selection-bg: var(--accent);
   --selection-ink: var(--accent-ink);
-  --ring: var(--accent);
 }
 
 [data-theme='light'] {
   color-scheme: light;
 
-  --canvas: oklch(0.985 0.002 285);
-  --surface: oklch(1 0 0);
-  --elevated: oklch(0.97 0.003 285);
+  --sunken: var(--neutral-100);
+  --canvas: var(--neutral-50);
+  --surface: var(--neutral-0);
+  --elevated: var(--neutral-100);
 
-  --ink: oklch(0.19 0.007 285);
-  --muted: oklch(0.45 0.01 285);
-  --faint: oklch(0.62 0.01 285);
+  --ink: var(--neutral-950);
+  --muted: var(--neutral-600);
+  --faint: var(--neutral-500);
+  --inverse: var(--neutral-0);
 
   --line: oklch(0 0 0 / 0.1);
-  --line-strong: oklch(0 0 0 / 0.16);
+  --line-strong: oklch(0 0 0 / 0.18);
 
-  --accent: oklch(0.62 0.17 78);
-  --accent-ink: oklch(0.99 0.01 78);
+  /* Darker accent steps — the light-mode versions need more chroma depth to
+     hold contrast against a near-white canvas. */
+  --accent: var(--brand-700);
+  --accent-hover: var(--brand-600);
+  --accent-soft: oklch(0.62 0.15 78 / 0.12);
+  --accent-ink: var(--neutral-0);
+
+  --scrim: oklch(0.16 0.006 285 / 0.4);
+
+  --glass-bg: oklch(1 0 0 / 0.6);
+  --glass-line: oklch(0 0 0 / 0.08);
+
+  --grad-from: var(--neutral-950);
+  --grad-to: var(--brand-700);
 }
 
-/* ------------------------------------------------------------------ */
-/* Tailwind theme mapping                                              */
-/* ------------------------------------------------------------------ */
+/* ══════════════════════════════════════════════════════════════════════
+   Z-INDEX LAYERS
+   ══════════════════════════════════════════════════════════════════════
 
+   Tailwind has no `z-index` theme namespace, so these are plain variables
+   consumed by the named `z-*` utilities in `utilities.css`.
+
+   Gaps of 10 leave room to slot a layer in without renumbering. Declaring
+   the whole stack in one place is what prevents the `z-index: 9999` arms race
+   that every large codebase eventually gets. */
+
+:root {
+  --z-below: -1; /* decorative art pushed behind content */
+  --z-base: 0; /* normal flow */
+  --z-raised: 10; /* cards lifted on hover */
+  --z-sticky: 20; /* sticky sub-headers, section labels */
+  --z-header: 30; /* site header */
+  --z-overlay: 40; /* scrim behind a panel */
+  --z-drawer: 50; /* mobile nav, side panels */
+  --z-modal: 60; /* dialogs */
+  --z-toast: 70; /* transient notifications */
+  --z-cursor: 80; /* custom cursor — must clear everything */
+  --z-max: 90; /* skip link, dev overlays */
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   3. TAILWIND MAP
+   ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * `@theme inline` emits utilities that reference the variable
+ * (`background-color: var(--canvas)`) instead of copying its value at build
+ * time. That indirection is precisely what makes runtime theme switching work
+ * — without `inline`, `bg-canvas` would bake in the dark value and never change.
+ */
 @theme inline {
-  /* -- Colour utilities: bg-canvas, text-ink, border-line, ... -------- */
+  /* Surfaces */
+  --color-sunken: var(--sunken);
   --color-canvas: var(--canvas);
   --color-surface: var(--surface);
   --color-elevated: var(--elevated);
 
+  /* Content */
   --color-ink: var(--ink);
   --color-muted: var(--muted);
   --color-faint: var(--faint);
+  --color-inverse: var(--inverse);
 
+  /* Borders */
   --color-line: var(--line);
   --color-line-strong: var(--line-strong);
 
+  /* Accent */
   --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-soft: var(--accent-soft);
   --color-accent-ink: var(--accent-ink);
 
+  /* State */
   --color-positive: var(--positive);
+  --color-warning: var(--warning);
   --color-negative: var(--negative);
 
-  /* -- Type families -------------------------------------------------- */
-  --font-display: 'Display', 'Sans', ui-sans-serif, system-ui, -apple-system,
-    'Segoe UI', sans-serif;
-  --font-sans: 'Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
-    Roboto, Helvetica, Arial, sans-serif;
-  --font-mono: ui-monospace, 'SFMono-Regular', 'JetBrains Mono', Menlo,
-    Consolas, monospace;
+  /* Utility */
+  --color-scrim: var(--scrim);
+  --color-glass: var(--glass-bg);
+  --color-glass-line: var(--glass-line);
+
+  /* ── Type families ───────────────────────────────────────────────────
+     Every stack ends in system fonts so text stays readable during the
+     webfont swap and if a file ever fails to load. */
+
+  /* Bricolage Grotesque — expressive grotesque for large headlines. */
+  --font-display: 'Bricolage Grotesque Variable', 'Inter Variable',
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* Inter — body and UI. Optimised for small sizes and screen rendering. */
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system,
+    'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+  /* Instrument Serif — editorial accent, best in italic for pull quotes. */
+  --font-serif: 'Instrument Serif', ui-serif, Georgia, 'Times New Roman', serif;
+
+  /* JetBrains Mono — eyebrows, indices, metadata, tabular numbers. */
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, 'SFMono-Regular',
+    Menlo, Consolas, monospace;
 }
 
 @theme {
-  /* -- Fluid display scale -------------------------------------------- */
-  /* clamp() so headlines scale with the viewport without breakpoint jumps. */
-  --text-display-sm: clamp(2rem, 1.4rem + 3vw, 3.25rem);
-  --text-display-sm--line-height: 1.05;
-  --text-display-sm--letter-spacing: -0.02em;
+  /* ── TYPOGRAPHY SCALE ────────────────────────────────────────────────
+     Display sizes use clamp() so they scale continuously with the viewport
+     instead of stepping at breakpoints — no headline is ever awkwardly sized
+     between two breakpoints.
 
-  --text-display: clamp(2.75rem, 1.6rem + 5.2vw, 5.5rem);
-  --text-display--line-height: 1;
-  --text-display--letter-spacing: -0.03em;
+     Read clamp(min, preferred, max) as: never smaller than min, never larger
+     than max, otherwise grow with the viewport.
 
-  --text-display-lg: clamp(3.5rem, 1.5rem + 9vw, 9rem);
-  --text-display-lg--line-height: 0.94;
-  --text-display-lg--letter-spacing: -0.04em;
+     Larger text needs tighter tracking and line-height to stay optically
+     balanced, which is why each step sets its own. */
 
-  /* -- Layout --------------------------------------------------------- */
+  --text-display-2xl: clamp(4rem, 1rem + 13vw, 12rem);
+  --text-display-2xl--line-height: 0.88;
+  --text-display-2xl--letter-spacing: -0.045em;
+  --text-display-2xl--font-weight: 500;
+
+  --text-display-xl: clamp(3.5rem, 1.5rem + 9vw, 9rem);
+  --text-display-xl--line-height: 0.92;
+  --text-display-xl--letter-spacing: -0.04em;
+  --text-display-xl--font-weight: 500;
+
+  --text-display-lg: clamp(2.75rem, 1.6rem + 5.2vw, 5.5rem);
+  --text-display-lg--line-height: 1;
+  --text-display-lg--letter-spacing: -0.03em;
+  --text-display-lg--font-weight: 500;
+
+  --text-display: clamp(2.25rem, 1.5rem + 3.6vw, 4rem);
+  --text-display--line-height: 1.04;
+  --text-display--letter-spacing: -0.028em;
+  --text-display--font-weight: 500;
+
+  --text-display-sm: clamp(1.75rem, 1.3rem + 2.2vw, 2.75rem);
+  --text-display-sm--line-height: 1.1;
+  --text-display-sm--letter-spacing: -0.022em;
+  --text-display-sm--font-weight: 500;
+
+  --text-display-xs: clamp(1.375rem, 1.15rem + 1.1vw, 1.875rem);
+  --text-display-xs--line-height: 1.2;
+  --text-display-xs--letter-spacing: -0.015em;
+  --text-display-xs--font-weight: 500;
+
+  /* Body — fixed sizes. Body copy should NOT scale with the viewport; the
+     user's browser font size is the accessibility contract. */
+  --text-body-lg: 1.125rem;
+  --text-body-lg--line-height: 1.65;
+
+  --text-body: 1rem;
+  --text-body--line-height: 1.7;
+
+  --text-body-sm: 0.9375rem;
+  --text-body-sm--line-height: 1.6;
+
+  /* Eyebrow / label — small, wide-tracked, uppercase. */
+  --text-eyebrow: 0.75rem;
+  --text-eyebrow--line-height: 1;
+  --text-eyebrow--letter-spacing: 0.14em;
+
+  /* ── TRACKING ────────────────────────────────────────────────────────
+     Extra-tight steps beyond Tailwind's defaults, for display type. */
+  --tracking-display: -0.04em;
+  --tracking-wider-caps: 0.14em;
+
+  /* ── SPACING ─────────────────────────────────────────────────────────
+     `--spacing` is the base unit; Tailwind derives its whole numeric scale
+     from it (p-4 = 4 × 0.25rem). The named tokens below are *semantic* and
+     generate real utilities: p-gutter, gap-section, mt-block, …
+
+     Fluid because a 6rem section gap that looks generous on desktop looks
+     broken on a phone. */
+  --spacing: 0.25rem;
+
+  --spacing-gutter: clamp(1.25rem, 4vw, 4rem); /* page side padding */
+  --spacing-section: clamp(5rem, 10vw, 10rem); /* between major sections */
+  --spacing-section-sm: clamp(3rem, 6vw, 6rem); /* tighter section rhythm */
+  --spacing-block: clamp(2rem, 4vw, 3.5rem); /* between blocks in a section */
+  --spacing-header: 5rem; /* fixed header height */
+
+  /* ── CONTAINERS ──────────────────────────────────────────────────────
+     Generates max-w-* utilities and @container sizes. */
+  --container-page: 90rem; /* standard content width */
+  --container-wide: 110rem; /* near-full-bleed showcase rows */
+  --container-prose: 44rem; /* ~70ch — optimal reading measure */
+
+  /* ── BREAKPOINTS ─────────────────────────────────────────────────────
+     Added on top of Tailwind's sm→2xl defaults. */
   --breakpoint-3xl: 96rem;
 
+  /* ── RADIUS ──────────────────────────────────────────────────────────
+     Semantic names as well as sizes, so a change to "how round is a card"
+     is one edit rather than a find-and-replace. */
   --radius-4xl: 2rem;
   --radius-5xl: 2.75rem;
 
-  /* Page gutter + max content width, referenced by the container utility */
-  --spacing-gutter: clamp(1.25rem, 4vw, 4rem);
-  --spacing-section: clamp(5rem, 10vw, 10rem);
+  --radius-input: 0.625rem;
+  --radius-card: 1.25rem;
+  --radius-panel: 1.75rem;
+  --radius-pill: 9999px;
 
-  /* -- Motion --------------------------------------------------------- */
-  /* One vocabulary of easings shared by CSS, Motion, and GSAP.
-     `animations/transitions.js` mirrors these as JS arrays. */
+  /* ── SHADOWS ─────────────────────────────────────────────────────────
+     Two-part shadows (a tight contact shadow plus a wide ambient one) read
+     as real light. A single large blur always looks like a sticker.
+
+     Kept subtle — on a dark canvas, elevation reads better through surface
+     lightness and borders than through drop shadows. */
+  --shadow-soft: 0 1px 2px oklch(0 0 0 / 0.06), 0 8px 24px oklch(0 0 0 / 0.08);
+  --shadow-lifted: 0 2px 4px oklch(0 0 0 / 0.08), 0 24px 48px oklch(0 0 0 / 0.16);
+  --shadow-floating: 0 4px 8px oklch(0 0 0 / 0.1), 0 40px 80px oklch(0 0 0 / 0.24);
+  --shadow-glow: 0 0 0 1px var(--accent-soft), 0 8px 32px var(--accent-soft);
+
+  --inset-shadow-line: inset 0 1px 0 0 oklch(1 0 0 / 0.06);
+
+  /* ── BLUR ────────────────────────────────────────────────────────────── */
+  --blur-glass: 16px;
+
+  /* ── MOTION: EASING ──────────────────────────────────────────────────
+     Mirrored as arrays in `animations/transitions.js` so CSS, Motion, and
+     GSAP animate on identical curves. Change one, change both.
+
+     No `ease-in-out` on entrances: real objects decelerate into place, so
+     an expo-out curve reads as physical while a symmetric curve reads
+     as mechanical. */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out-expo: cubic-bezier(0.87, 0, 0.13, 1);
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 
+  /* ── MOTION: DURATION ────────────────────────────────────────────────
+     instant  hover/active feedback — must feel immediate
+     fast     small UI state changes
+     base     the default for most transitions
+     slow     entrances and reveals
+     slower   full-section and page-level moves */
+  --duration-instant: 120ms;
   --duration-fast: 200ms;
   --duration-base: 400ms;
   --duration-slow: 800ms;
+  --duration-slower: 1200ms;
 
-  /* -- Elevation ------------------------------------------------------- */
-  --shadow-soft: 0 1px 2px oklch(0 0 0 / 0.06), 0 8px 24px oklch(0 0 0 / 0.08);
-  --shadow-lifted: 0 2px 4px oklch(0 0 0 / 0.08), 0 24px 48px oklch(0 0 0 / 0.16);
+  /* Tailwind's bare `transition` utility inherits these. */
+  --default-transition-duration: 200ms;
+  --default-transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* ── KEYFRAME ANIMATIONS ─────────────────────────────────────────────
+     Generates animate-* utilities. Only looping, decorative motion belongs
+     here — one-shot entrances are Motion's job, since it can sequence and
+     interrupt them. */
+  --animate-marquee: marquee 30s linear infinite;
+  --animate-float: float 6s var(--ease-in-out-quart) infinite;
+  --animate-pulse-soft: pulse-soft 3s var(--ease-in-out-quart) infinite;
+  --animate-shimmer: shimmer 2.4s linear infinite;
+  --animate-gradient-pan: gradient-pan 8s var(--ease-in-out-quart) infinite;
+
+  @keyframes marquee {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+    50% {
+      transform: translate3d(0, -0.75rem, 0);
+    }
+  }
+
+  @keyframes pulse-soft {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.55;
+    }
+  }
+
+  /* Paired with a `background-size: 200%` gradient — used for skeletons. */
+  @keyframes shimmer {
+    from {
+      background-position: 200% 0;
+    }
+    to {
+      background-position: -200% 0;
+    }
+  }
+
+  @keyframes gradient-pan {
+    0%,
+    100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
 }

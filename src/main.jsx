@@ -5,7 +5,7 @@ import '@/styles/index.css'
 
 import { App } from './App'
 import { AppProviders } from '@/context/AppProviders'
-import { ErrorBoundary } from '@/components'
+import { ErrorBoundary } from '@/components/shared'
 
 /**
  * Application entry point.

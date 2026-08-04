@@ -1,28 +1,327 @@
 /**
- * Project utilities.
+ * UTILITIES
+ * =========
  *
- * `@utility` (Tailwind v4) registers these in the utilities layer, so they
- * respond to variants like `md:` and `hover:` and are tree-shaken when unused —
- * which a plain `.class` in @layer would not be.
+ * Single-purpose classes that compose with Tailwind's own. Component-shaped
+ * classes (buttons, cards, headings) live in `components.css`.
  *
- * Keep this file small. If something is only used once, it belongs in the
- * component; if it needs props, it belongs in a React component.
+ * Declared with `@utility` rather than plain classes in `@layer` for two
+ * concrete reasons:
+ *
+ *   1. They accept variants — `md:section-y`, `hover:glass`, `dark:text-gradient`
+ *      all work, which a bare `.class` in `@layer components` cannot do.
+ *   2. They are tree-shaken. An unused utility never reaches the bundle.
+ *
+ * Keep this file small. A rule used once belongs in its component; a rule that
+ * needs props belongs in a React component.
  */
 
-/* Page container: centred, capped, with the responsive gutter from theme.css. */
+/* ══════════════════════════════════════════════════════════════════════
+   LAYOUT — containers
+   ══════════════════════════════════════════════════════════════════════
+
+   Centred, width-capped, with the fluid page gutter. Prefer the <Container>
+   component in app code; these exist for the cases where a wrapper element
+   would be wasteful. */
+
 @utility container-page {
   width: 100%;
-  max-width: 90rem;
+  max-width: var(--container-page);
   margin-inline: auto;
   padding-inline: var(--spacing-gutter);
 }
 
-/* Standard vertical rhythm between top-level sections. */
+/* Showcase rows and galleries that should run wider than body content. */
+@utility container-wide {
+  width: 100%;
+  max-width: var(--container-wide);
+  margin-inline: auto;
+  padding-inline: var(--spacing-gutter);
+}
+
+/* Long-form text. ~70 characters is the readable measure; wider and the eye
+   loses the line it is returning to. */
+@utility container-prose {
+  width: 100%;
+  max-width: var(--container-prose);
+  margin-inline: auto;
+  padding-inline: var(--spacing-gutter);
+}
+
+/**
+ * Escape the parent container to full viewport width while staying in flow.
+ * For edge-to-edge imagery inside an otherwise contained page.
+ */
+@utility full-bleed {
+  width: 100vw;
+  margin-inline: calc(50% - 50vw);
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   LAYOUT — vertical rhythm
+   ══════════════════════════════════════════════════════════════════════
+
+   One consistent set of section gaps is most of what separates a designed
+   page from an assembled one. Always use these instead of ad-hoc py-* values. */
+
 @utility section-y {
   padding-block: var(--spacing-section);
 }
 
-/* Hide scrollbars while keeping the element scrollable (carousels, marquees). */
+@utility section-y-sm {
+  padding-block: var(--spacing-section-sm);
+}
+
+/* Opens a section's top edge only — for a section that follows a full-bleed
+   element and should not double up its spacing. */
+@utility section-t {
+  padding-block-start: var(--spacing-section);
+}
+
+@utility section-b {
+  padding-block-end: var(--spacing-section);
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   Z-INDEX LAYERS
+   ══════════════════════════════════════════════════════════════════════
+
+   Named stacking levels from the scale in `theme.css`. Use these, never a
+   numeric `z-50` — a name states intent and cannot drift out of order.
+
+   If two things collide, the fix is to reorder the scale in one place, not to
+   add another arbitrary number here. */
+
+@utility z-below {
+  z-index: var(--z-below);
+}
+@utility z-base {
+  z-index: var(--z-base);
+}
+@utility z-raised {
+  z-index: var(--z-raised);
+}
+@utility z-sticky {
+  z-index: var(--z-sticky);
+}
+@utility z-header {
+  z-index: var(--z-header);
+}
+@utility z-overlay {
+  z-index: var(--z-overlay);
+}
+@utility z-drawer {
+  z-index: var(--z-drawer);
+}
+@utility z-modal {
+  z-index: var(--z-modal);
+}
+@utility z-toast {
+  z-index: var(--z-toast);
+}
+@utility z-cursor {
+  z-index: var(--z-cursor);
+}
+@utility z-max {
+  z-index: var(--z-max);
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   MOTION — named durations
+   ══════════════════════════════════════════════════════════════════════
+
+   Tailwind v4 has theme namespaces for easing (`--ease-*`) but NOT for
+   duration — `duration-*` only accepts numbers, so `duration-fast` would
+   silently produce nothing. These bridge that gap so the timing scale in
+   `theme.css` is usable from markup, not just from raw CSS.
+
+   Use these instead of `duration-200`: a name survives a change to the scale,
+   a magic number does not. */
+
+@utility duration-instant {
+  transition-duration: var(--duration-instant);
+}
+@utility duration-fast {
+  transition-duration: var(--duration-fast);
+}
+@utility duration-base {
+  transition-duration: var(--duration-base);
+}
+@utility duration-slow {
+  transition-duration: var(--duration-slow);
+}
+@utility duration-slower {
+  transition-duration: var(--duration-slower);
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   SURFACES — glass
+   ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * Frosted panel. For the floating header, mobile nav, and overlay chrome.
+ *
+ * `backdrop-filter` is genuinely expensive — it forces the compositor to
+ * re-sample everything behind the element every frame. Use it on a handful of
+ * persistent elements, never on list items or anything animating position.
+ *
+ * The `saturate()` boost stops the blur from washing colour out of what's
+ * behind it, which is what makes cheap glass look grey.
+ */
+@utility glass {
+  background-color: var(--glass-bg);
+  border: 1px solid var(--glass-line);
+  backdrop-filter: blur(var(--blur-glass)) saturate(1.6);
+  -webkit-backdrop-filter: blur(var(--blur-glass)) saturate(1.6);
+}
+
+/** Heavier variant for surfaces that must stay readable over busy imagery. */
+@utility glass-strong {
+  background-color: color-mix(in oklch, var(--surface) 78%, transparent);
+  border: 1px solid var(--glass-line);
+  backdrop-filter: blur(calc(var(--blur-glass) * 1.75)) saturate(1.6);
+  -webkit-backdrop-filter: blur(calc(var(--blur-glass) * 1.75)) saturate(1.6);
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   TEXT EFFECTS
+   ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * Gradient-filled text.
+ *
+ * `color: transparent` is the fallback: if `background-clip: text` is
+ * unsupported the text would otherwise vanish, so browsers without it still
+ * get the `-webkit-text-fill-color` path. Both are set deliberately.
+ *
+ * Accessibility: gradient text defeats contrast checking. Restrict it to large
+ * display headings, never body copy or anything conveying critical information.
+ */
+@utility text-gradient {
+  background-image: linear-gradient(
+    115deg,
+    var(--grad-from) 0%,
+    var(--grad-to) 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/** Gradient that slowly drifts. Pair with `animate-gradient-pan`. */
+@utility text-gradient-shine {
+  background-image: linear-gradient(
+    115deg,
+    var(--grad-from) 0%,
+    var(--grad-to) 45%,
+    var(--grad-from) 100%
+  );
+  background-size: 250% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/** Outlined display type — for oversized decorative headings. */
+@utility text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1px var(--line-strong);
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   HOVER & INTERACTION
+   ══════════════════════════════════════════════════════════════════════
+
+   All of these animate `transform` and `opacity` only — the two properties a
+   browser can composite on the GPU without recalculating layout or repainting.
+   Animating `top`, `width`, `margin`, or `box-shadow` costs a layout pass per
+   frame and is the usual cause of janky hover states.
+
+   Every effect is wrapped in `@media (hover: hover)` so touch devices, which
+   fire hover on tap and then keep it stuck, are excluded. */
+
+/** Lift on hover. The workhorse for cards and tiles. */
+@utility hover-lift {
+  transition: transform var(--duration-base) var(--ease-out-expo);
+
+  @media (hover: hover) {
+    &:hover {
+      transform: translate3d(0, -0.375rem, 0);
+    }
+  }
+}
+
+/** Subtle grow. For thumbnails and avatars — pair with `overflow-hidden`. */
+@utility hover-scale {
+  transition: transform var(--duration-slow) var(--ease-out-expo);
+
+  @media (hover: hover) {
+    &:hover {
+      transform: scale3d(1.04, 1.04, 1);
+    }
+  }
+}
+
+/** Accent halo. Reserve for the single primary call to action on a view. */
+@utility hover-glow {
+  transition: box-shadow var(--duration-base) var(--ease-out-expo);
+
+  @media (hover: hover) {
+    &:hover {
+      box-shadow: var(--shadow-glow);
+    }
+  }
+}
+
+/**
+ * Underline that wipes in from the left and out to the right — the small
+ * detail that reads as "considered" on text links.
+ *
+ * Uses a scaled pseudo-element rather than `text-decoration` because
+ * transforms are compositable and `text-decoration` is not animatable.
+ */
+@utility link-underline {
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    bottom: -0.125em;
+    height: 1px;
+    background-color: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform var(--duration-base) var(--ease-out-expo);
+  }
+
+  @media (hover: hover) {
+    &:hover::after {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+  }
+}
+
+/** Fade to full opacity on hover. For secondary/meta links. */
+@utility hover-fade {
+  opacity: 0.6;
+  transition: opacity var(--duration-fast) var(--ease-out-quart);
+
+  @media (hover: hover) {
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   HELPERS
+   ══════════════════════════════════════════════════════════════════════ */
+
+/** Scrollable but without a visible scrollbar — carousels, marquees. */
 @utility no-scrollbar {
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -35,8 +334,9 @@
 /**
  * Promote to its own compositor layer.
  *
- * Apply immediately before an animation starts and remove when it ends —
- * a permanent `will-change` wastes GPU memory and can hurt more than it helps.
+ * Apply right before an animation starts and remove when it ends. A permanent
+ * `will-change` reserves GPU memory for a layer that never changes, which on a
+ * long page costs more than it saves.
  */
 @utility gpu {
   will-change: transform;
@@ -44,13 +344,13 @@
   backface-visibility: hidden;
 }
 
-/* Block the browser's native image drag ghost on interactive media. */
+/** Suppress the browser's native drag ghost on interactive media. */
 @utility drag-none {
   -webkit-user-drag: none;
   user-select: none;
 }
 
-/* Fade content out at the top and bottom edges — for scroll areas and marquees. */
+/** Fade content out at the top and bottom edges of a scroll area. */
 @utility mask-fade-y {
   mask-image: linear-gradient(
     to bottom,
@@ -61,7 +361,7 @@
   );
 }
 
-/* Same, horizontally. */
+/** Horizontal equivalent — for marquees and overflow rows. */
 @utility mask-fade-x {
   mask-image: linear-gradient(
     to right,
@@ -73,14 +373,15 @@
 }
 
 /**
- * Skip-to-content link: visually hidden until it receives keyboard focus.
- * Paired with the `#main` landmark in RootLayout.
+ * Skip-to-content link. Off-screen until it receives keyboard focus, which is
+ * a WCAG 2.4.1 requirement — it lets keyboard and screen-reader users bypass
+ * the navigation instead of tabbing through it on every page.
  */
 @utility skip-link {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 100;
+  z-index: var(--z-max);
   transform: translateY(-120%);
   transition: transform var(--duration-fast) var(--ease-out-expo);
 

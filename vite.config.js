@@ -47,11 +47,20 @@ export default defineConfig({
           groups: [
             {
               name: 'react',
-              test: /[\\/]node_modules[\\/](react|react-dom|react-router|scheduler)[\\/]/,
+              test: /[\\/]node_modules[\\/](react|react-dom|react-router|react-router-dom|scheduler)[\\/]/,
             },
             {
+              // `motion` re-exports from `framer-motion` internally, so the
+              // real implementation lives under that directory name — matching
+              // only `motion` leaves AnimatePresence in the app chunk.
               name: 'animation',
-              test: /[\\/]node_modules[\\/](gsap|@gsap[\\/]react|motion|motion-dom|motion-utils|lenis)[\\/]/,
+              test: /[\\/]node_modules[\\/](gsap|@gsap[\\/]react|motion|framer-motion|motion-dom|motion-utils|lenis)[\\/]/,
+            },
+            {
+              // Small, stable, and imported by nearly every component. Split so
+              // that shipping a component change never re-downloads them.
+              name: 'utils',
+              test: /[\\/]node_modules[\\/](clsx|tailwind-merge)[\\/]/,
             },
           ],
         },

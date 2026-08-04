@@ -1,52 +1,82 @@
 /**
- * Custom font loading.
+ * FONT LOADING
+ * ============
  *
- * Self-hosting is the default here — no external requests, no layout shift from
- * a third-party stylesheet, and full control over `font-display`.
+ * Fonts are **self-hosted** via Fontsource packages, not linked from the Google
+ * Fonts CDN. That matters for three reasons:
  *
- * HOW TO ADD A FONT
- * -----------------
- * 1. Drop the `.woff2` file into `src/assets/fonts/`.
- *    Prefer a *variable* font: one file covers every weight.
- * 2. Uncomment the matching block below and fix the filename.
- * 3. Point the token at it in `theme.css` (`--font-display` / `--font-sans`).
+ *   1. Performance — no extra DNS lookup, TLS handshake, and render-blocking
+ *      round-trip to a third-party origin before text can paint.
+ *   2. Privacy — no visitor IP is handed to a third party (a GDPR concern in
+ *      the EU, where CDN font embedding has been ruled unlawful).
+ *   3. Reliability — the site cannot lose its typography to someone else's
+ *      outage, and the files are versioned in the lockfile.
  *
- * The `url()` paths are relative to THIS file, and Vite fingerprints and
- * rewrites them at build time — no `/public` copy needed.
+ * Vite fingerprints and rewrites the `.woff2` URLs at build time, so these
+ * resolve to hashed, immutably-cacheable assets in `dist/`.
  *
- * Blocks stay commented until real files exist; a @font-face pointing at a
- * missing file costs a failed request on every page load.
+ * WHY THESE FOUR
+ * --------------
+ * Display + text + accent + mono is the classic editorial pairing: one voice
+ * for impact, one for reading, one for personality, one for data.
+ *
+ *   Bricolage Grotesque  Display. A contemporary grotesque with real character
+ *                        in the counters — distinctive at 8rem, where Inter
+ *                        would read as generic.
+ *   Inter                Body/UI. Designed for screens at small sizes; tall
+ *                        x-height keeps long paragraphs legible.
+ *   Instrument Serif     Accent. High-contrast serif, best in italic for pull
+ *                        quotes and single emphasised words.
+ *   JetBrains Mono       Meta. Eyebrows, indices, dates, tabular figures.
+ *
+ * The first, second, and fourth are VARIABLE fonts: one file spans every weight
+ * from 100–900, so using four weights costs one download instead of four.
+ *
+ * We import the `wght.css` entry rather than `index.css` to load the weight
+ * axis alone. Each file declares several `@font-face` rules split by
+ * `unicode-range`, so a visitor reading Latin text never downloads the Cyrillic
+ * or Greek subsets.
+ *
+ * BUDGET: roughly 120–160 kB of woff2 across all four, and only the subsets
+ * actually used get fetched. To trim, drop Instrument Serif first — it is the
+ * decorative one. Remove the import, the `--font-serif` token in `theme.css`,
+ * and `npm uninstall @fontsource/instrument-serif`.
  */
 
-/* -- Display / headline face (variable) ----------------------------------- */
+/* Display — variable weight axis 200–800 */
+@import '@fontsource-variable/bricolage-grotesque/wght.css';
+
+/* Body / UI — variable weight axis 100–900 */
+@import '@fontsource-variable/inter/wght.css';
+
+/* Meta / eyebrows — variable weight axis */
+@import '@fontsource-variable/jetbrains-mono/wght.css';
+
+/* Editorial accent — static 400, upright + italic, Latin subset only */
+@import '@fontsource/instrument-serif/latin-400.css';
+@import '@fontsource/instrument-serif/latin-400-italic.css';
+
+/**
+ * SWAPPING IN A LICENSED FONT
+ * ---------------------------
+ * Commercial faces (Satoshi, GT Walsheim, Söhne, PP Neue Montreal…) are not on
+ * npm. To use one:
+ *
+ *   1. Put the `.woff2` in `src/assets/fonts/`.
+ *   2. Uncomment and adapt the block below.
+ *   3. Point `--font-display` in `theme.css` at the new family name.
+ *   4. Remove the matching Fontsource import above.
+ *
+ * `font-display: swap` renders fallback text immediately and swaps when the
+ * font arrives — text is never invisible, at the cost of one reflow. Prefer it
+ * over `block` for body copy; consider `optional` for purely decorative faces.
+ */
+
 /*
 @font-face {
   font-family: 'Display';
   src: url('../assets/fonts/display-variable.woff2') format('woff2-variations');
-  font-weight: 300 900;
-  font-style: normal;
-  font-display: swap;
-  font-named-instance: 'Regular';
-}
-*/
-
-/* -- Body / UI face (variable) -------------------------------------------- */
-/*
-@font-face {
-  font-family: 'Sans';
-  src: url('../assets/fonts/sans-variable.woff2') format('woff2-variations');
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
-*/
-
-/* -- Static-weight example (non-variable fonts only) ---------------------- */
-/*
-@font-face {
-  font-family: 'Sans';
-  src: url('../assets/fonts/sans-medium.woff2') format('woff2');
-  font-weight: 500;
+  font-weight: 200 800;
   font-style: normal;
   font-display: swap;
 }
