@@ -54,6 +54,15 @@
   --brand-600: oklch(0.7 0.16 78);
   --brand-700: oklch(0.62 0.15 78);
 
+  /* Secondary brand — violet, hue 300. Not an alternative accent for UI: it
+     exists to give the atmospheric gradients a second hue to travel toward.
+     A single-hue glow reads flat; gold→violet gives the background depth and
+     is what separates "dark theme" from "dark futuristic". */
+  --violet-300: oklch(0.78 0.15 300);
+  --violet-400: oklch(0.7 0.19 300);
+  --violet-500: oklch(0.62 0.22 300);
+  --violet-600: oklch(0.54 0.22 300);
+
   /* Feedback hues — only ever used for state, never decoration. */
   --green-500: oklch(0.75 0.16 155);
   --amber-500: oklch(0.8 0.15 85);
@@ -106,6 +115,14 @@
   --grad-from: var(--neutral-50);
   --grad-to: var(--brand-500);
 
+  /* Atmospheric glows — the layered light behind the hero.
+     Alpha-heavy on purpose: these stack, and anything more saturated turns
+     the canvas muddy where two overlap. */
+  --accent-alt: var(--violet-500);
+  --glow-warm: oklch(0.78 0.17 78 / 0.18);
+  --glow-cool: oklch(0.62 0.22 300 / 0.2);
+  --glow-neutral: oklch(0.72 0.008 285 / 0.1);
+
   /* Focus ring */
   --ring: var(--accent);
 
@@ -144,6 +161,13 @@
 
   --grad-from: var(--neutral-950);
   --grad-to: var(--brand-700);
+
+  /* Glows must be far weaker on a near-white canvas — the same alpha that
+     reads as atmosphere on black reads as a printing error on white. */
+  --accent-alt: var(--violet-600);
+  --glow-warm: oklch(0.7 0.16 78 / 0.12);
+  --glow-cool: oklch(0.54 0.22 300 / 0.1);
+  --glow-neutral: oklch(0.5 0.011 285 / 0.06);
 }
 
 /* ══════════════════════════════════════════════════════════════════════
@@ -155,16 +179,22 @@
 
    Gaps of 10 leave room to slot a layer in without renumbering. Declaring
    the whole stack in one place is what prevents the `z-index: 9999` arms race
-   that every large codebase eventually gets. */
+   that every large codebase eventually gets.
+
+   NOTE ON HEADER vs OVERLAY: the full-screen mobile nav sits at `overlay` and
+   the header rises to `drawer` above it. That inverts the usual convention on
+   purpose — the header contains the toggle that dismisses the panel, so a
+   panel stacked over it would bury its own close button. Whenever a layer
+   owns the control that dismisses another, it has to outrank it. */
 
 :root {
   --z-below: -1; /* decorative art pushed behind content */
   --z-base: 0; /* normal flow */
   --z-raised: 10; /* cards lifted on hover */
   --z-sticky: 20; /* sticky sub-headers, section labels */
-  --z-header: 30; /* site header */
-  --z-overlay: 40; /* scrim behind a panel */
-  --z-drawer: 50; /* mobile nav, side panels */
+  --z-header: 30; /* site header, resting state */
+  --z-overlay: 40; /* scrims and the full-screen nav panel */
+  --z-drawer: 50; /* the header while a panel is open — see note */
   --z-modal: 60; /* dialogs */
   --z-toast: 70; /* transient notifications */
   --z-cursor: 80; /* custom cursor — must clear everything */
@@ -203,6 +233,7 @@
   --color-accent-hover: var(--accent-hover);
   --color-accent-soft: var(--accent-soft);
   --color-accent-ink: var(--accent-ink);
+  --color-accent-alt: var(--accent-alt);
 
   /* State */
   --color-positive: var(--positive);
@@ -300,7 +331,7 @@
   /* ── SPACING ─────────────────────────────────────────────────────────
      `--spacing` is the base unit; Tailwind derives its whole numeric scale
      from it (p-4 = 4 × 0.25rem). The named tokens below are *semantic* and
-     generate real utilities: p-gutter, gap-section, mt-block, …
+     generate real utilities: p-gutter, gap-section, mt-stack, …
 
      Fluid because a 6rem section gap that looks generous on desktop looks
      broken on a phone. */
@@ -309,8 +340,24 @@
   --spacing-gutter: clamp(1.25rem, 4vw, 4rem); /* page side padding */
   --spacing-section: clamp(5rem, 10vw, 10rem); /* between major sections */
   --spacing-section-sm: clamp(3rem, 6vw, 6rem); /* tighter section rhythm */
-  --spacing-block: clamp(2rem, 4vw, 3.5rem); /* between blocks in a section */
+  --spacing-stack: clamp(2rem, 4vw, 3.5rem); /* between blocks in a section */
   --spacing-header: 5rem; /* fixed header height */
+
+  /* ⚠️ NAMING A SPACING TOKEN IS NAMING A UTILITY — CHECK FOR COLLISIONS.
+   *
+   * Every `--spacing-*` key generates utilities across many prefixes, including
+   * the logical-property ones: `inline-<key>` compiles to `inline-size`.
+   *
+   * This token was originally `--spacing-block`, which generated
+   * `.inline-block { inline-size: … }` — colliding with Tailwind's own
+   * `inline-block` DISPLAY utility and, being emitted later, overriding it.
+   * Every `inline-block` element in the app silently became 56px wide, which
+   * clipped the hero headline to one glyph per word.
+   *
+   * Nothing warns about this: both rules are valid, and the class still exists.
+   * Before adding a token here, check the name against Tailwind's utility
+   * namespace — `block`, `inline`, `flex`, `grid`, `table`, `contents`, `auto`,
+   * `full`, `min`, `max`, and `fit` are all reserved by existing utilities. */
 
   /* ── CONTAINERS ──────────────────────────────────────────────────────
      Generates max-w-* utilities and @container sizes. */
@@ -387,6 +434,41 @@
   --animate-pulse-soft: pulse-soft 3s var(--ease-in-out-quart) infinite;
   --animate-shimmer: shimmer 2.4s linear infinite;
   --animate-gradient-pan: gradient-pan 8s var(--ease-in-out-quart) infinite;
+
+  /* Atmospheric motion. Deliberately very slow — background light that reads
+     as *moving* becomes the subject of the page. At 18–26s it registers as
+     depth rather than as animation. Transform and opacity only, so the
+     compositor handles them without repainting the blurred layers. */
+  --animate-drift: drift 22s var(--ease-in-out-quart) infinite;
+  --animate-drift-slow: drift-alt 26s var(--ease-in-out-quart) infinite;
+  --animate-spin-slow: spin 24s linear infinite;
+  --animate-spin-slower: spin 48s linear infinite;
+
+  @keyframes drift {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0) scale(1);
+      opacity: 0.85;
+    }
+    50% {
+      transform: translate3d(6%, -8%, 0) scale(1.12);
+      opacity: 1;
+    }
+  }
+
+  /* Counter-phase partner for `drift`, so two glows never move in lockstep —
+     synchronised blobs read as a single shape and the depth collapses. */
+  @keyframes drift-alt {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0) scale(1.08);
+      opacity: 1;
+    }
+    50% {
+      transform: translate3d(-7%, 6%, 0) scale(0.94);
+      opacity: 0.8;
+    }
+  }
 
   @keyframes marquee {
     from {

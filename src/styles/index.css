@@ -10,19 +10,27 @@
  *   2. fonts         @font-face — must be registered before anything uses them
  *   3. theme         Design tokens (the vocabulary)
  *   4. base          Element defaults (the foundation)
- *   5. utilities     Single-purpose classes (the tools)
- *   6. components    Multi-part patterns (the parts)
+ *   5. components    Multi-part patterns (the parts)
+ *   6. utilities     Single-purpose classes (the tools)
  *
- * Tokens before everything that consumes them; utilities before components so
- * that a component class can be overridden by a utility at the call site.
+ * Tokens before everything that consumes them.
+ *
+ * COMPONENTS BEFORE UTILITIES, and the order is load-bearing. `@utility` puts
+ * every custom class in the same cascade layer at equal specificity, so source
+ * order alone decides which wins. Components last would mean `eyebrow` (which
+ * sets `display: inline-flex`) silently beating a `flex` written at the call
+ * site — the override would look correct in the markup and do nothing.
+ *
+ * Utilities last is the rule that keeps `className` predictable: the small,
+ * specific thing you wrote at the usage site always wins over the pattern.
  */
 @import 'tailwindcss';
 
 @import './fonts.css';
 @import './theme.css';
 @import './base.css';
-@import './utilities.css';
 @import './components.css';
+@import './utilities.css';
 
 /**
  * Tell Tailwind where to scan for class names. It infers this from the project

@@ -2,7 +2,8 @@ import { useLocation, useOutlet } from 'react-router-dom'
 import { AnimatePresence, motion } from 'motion/react'
 
 import { SmoothScroll } from './SmoothScroll'
-import { ScrollToTop } from '@/components/shared'
+import { Header, ScrollToTop } from '@/components/shared'
+import { NoiseOverlay } from '@/components/ui'
 import { pageTransition } from '@/animations'
 
 /**
@@ -46,7 +47,13 @@ export function MainLayout() {
         Skip to content
       </a>
 
-      {/* <Header /> — mounts here, outside AnimatePresence, so it persists. */}
+      {/* Grain sits above every layer and below all content, unifying the
+          gradients, glass, and canvas into one surface. */}
+      <NoiseOverlay />
+
+      {/* Outside AnimatePresence, so it persists across route transitions
+          instead of re-mounting and replaying its entrance. */}
+      <Header />
 
       <AnimatePresence mode="wait" initial={false}>
         <motion.main

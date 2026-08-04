@@ -20,6 +20,8 @@ export { usePrefersReducedMotion } from './usePrefersReducedMotion'
 /* Scroll */
 export { useScrollDirection } from './useScrollDirection'
 export { useLockScroll } from './useLockScroll'
+export { useActiveSection } from './useActiveSection'
+export { useAnchorScroll } from './useAnchorScroll'
 
 /* Pointer */
 export { useMousePosition } from './useMousePosition'

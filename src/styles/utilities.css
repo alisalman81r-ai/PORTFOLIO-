@@ -318,6 +318,123 @@
 }
 
 /* ══════════════════════════════════════════════════════════════════════
+   ATMOSPHERE — glows, noise, grid
+   ══════════════════════════════════════════════════════════════════════
+
+   The layered depth behind the hero. Every one of these is a *background*,
+   never a `filter: blur()`.
+
+   That distinction is the single most important performance decision in this
+   file. A blurred element must be rasterised at full size and re-blurred
+   whenever it changes; a radial-gradient is drawn once and then only
+   composited. Visually they are near-identical at these radii — but the
+   gradient version animates at 60fps on a phone and the blurred one does not. */
+
+/** Warm gold glow. The primary light source. */
+@utility glow-warm {
+  background-image: radial-gradient(
+    circle at center,
+    var(--glow-warm) 0%,
+    transparent 70%
+  );
+}
+
+/** Cool violet glow. The counter-light that gives the canvas depth. */
+@utility glow-cool {
+  background-image: radial-gradient(
+    circle at center,
+    var(--glow-cool) 0%,
+    transparent 70%
+  );
+}
+
+/** Neutral lift — used to separate a surface from the canvas without hue. */
+@utility glow-neutral {
+  background-image: radial-gradient(
+    circle at center,
+    var(--glow-neutral) 0%,
+    transparent 70%
+  );
+}
+
+/**
+ * Film-grain noise.
+ *
+ * The detail that stops large flat gradients from banding into visible steps,
+ * and the main reason a dark gradient reads as "photographic" rather than
+ * "CSS". An SVG turbulence tile encoded as a data URI: ~300 bytes, repeated by
+ * the browser, no network request and no image asset to manage.
+ *
+ * Keep the opacity very low (2–5%) — grain you can consciously see is dirt.
+ */
+@utility noise {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+}
+
+/** Faint technical grid. Reads as blueprint/engineering rather than decoration. */
+@utility bg-grid {
+  background-image: linear-gradient(to right, var(--line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+  background-size: 4rem 4rem;
+}
+
+/**
+ * Conic gradient ring.
+ *
+ * Draws a rotating light along a border using a masked conic gradient — the
+ * `padding-box`/`border-box` mask exclusion is what confines the fill to the
+ * 1px border instead of flooding the element.
+ */
+@utility ring-conic {
+  border: 1px solid transparent;
+  background-image: conic-gradient(
+    from 0deg,
+    transparent 0%,
+    var(--accent) 12%,
+    transparent 28%,
+    transparent 55%,
+    var(--accent-alt) 68%,
+    transparent 84%
+  );
+  background-origin: border-box;
+  background-clip: border-box;
+  mask:
+    linear-gradient(#000 0 0) padding-box exclude,
+    linear-gradient(#000 0 0) border-box;
+  mask-composite: exclude;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   TEXT MASKING
+   ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * Clipping window for a line of type that slides in from below.
+ *
+ * The padding/negative-margin pair is doing real work: `overflow: hidden` on a
+ * line box clips descenders (g, y, p, j) flush against the baseline. Padding
+ * the box out and pulling it back with an equal negative margin restores the
+ * descender room without affecting layout.
+ */
+@utility line-mask {
+  display: inline-block;
+  overflow: hidden;
+
+  /* A masked unit must never wrap inside its own clipping window — a second
+     line would be silently cut off by `overflow: hidden`. Wrapping still
+     happens *between* masks, so a headline breaks across lines normally. */
+  white-space: nowrap;
+
+  /* `overflow: hidden` clips descenders (g, y, p, j) flush at the baseline.
+     Padding the box out and pulling it back with an equal negative margin
+     restores the descender room without affecting layout. */
+  padding-bottom: 0.16em;
+  margin-bottom: -0.16em;
+  vertical-align: bottom;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
    HELPERS
    ══════════════════════════════════════════════════════════════════════ */
 
