@@ -4,6 +4,7 @@ import { ArrowUpRight } from 'lucide-react'
 
 import { DURATION, EASE, STAGGER } from '@/animations'
 import { NAV_LINKS, PERSONAL, SOCIAL_LINKS } from '@/data'
+import { ThemeToggle } from '@/components/ui'
 import { useAnchorScroll, useFocusTrap } from '@/hooks'
 import { cn } from '@/utils'
 
@@ -131,9 +132,12 @@ export function MobileMenu({ id, onClose, activeId }) {
       </nav>
 
       <motion.div variants={item} className="mt-10 flex flex-col gap-6">
-        <a href={PERSONAL.resumeUrl} className="btn btn-primary w-full">
-          Download résumé
-        </a>
+        <div className="flex items-center gap-3">
+          <a href={PERSONAL.resumeUrl} className="btn btn-primary flex-1">
+            Download résumé
+          </a>
+          <ThemeToggle />
+        </div>
 
         <ul className="flex flex-wrap gap-x-6 gap-y-2">
           {SOCIAL_LINKS.map((social) => (

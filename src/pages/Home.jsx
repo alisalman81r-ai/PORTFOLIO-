@@ -5,6 +5,7 @@ import { Suspense, lazy } from 'react'
 // defeat the dynamic imports below — the bundler would already have a static
 // path to those modules and keep them in the entry chunk. Rolldown warns about
 // exactly this (INEFFECTIVE_DYNAMIC_IMPORT).
+import { Seo } from '@/components/shared'
 import { Hero } from '@/sections/hero'
 import { About } from '@/sections/about'
 
@@ -70,6 +71,9 @@ const Placeholder = () => <div aria-hidden="true" className="min-h-svh" />
 export default function Home() {
   return (
     <>
+      {/* Site default title — no override, this is the landing page. */}
+      <Seo />
+
       <Hero />
       <About />
 
@@ -109,7 +113,6 @@ export default function Home() {
         <Contact />
       </Suspense>
 
-      {/* <Footer /> */}
     </>
   )
 }

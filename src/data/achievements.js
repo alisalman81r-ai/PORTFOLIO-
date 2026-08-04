@@ -1,5 +1,5 @@
-import { PROJECTS } from './projects'
-import { ALL_SKILLS } from './skills'
+import { PROJECTS } from './projects.js'
+import { ALL_SKILLS } from './skills.js'
 
 /**
  * Achievement counters.

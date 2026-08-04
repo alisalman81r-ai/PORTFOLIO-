@@ -13,6 +13,7 @@
 
 export { Header } from './Header'
 export { Footer } from './Footer'
+export { Seo } from './Seo'
 export { Cursor } from './Cursor'
 export { PageLoader } from './PageLoader'
 export { ScrollProgress } from './ScrollProgress'

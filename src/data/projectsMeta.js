@@ -1,4 +1,4 @@
-import { PROJECTS } from './projects'
+import { PROJECTS } from './projects.js'
 
 /**
  * Projects section copy and filter definitions.

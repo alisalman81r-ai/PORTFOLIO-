@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 
 import { MobileMenu } from './MobileMenu'
-import { HamburgerButton, Logo } from '@/components/ui'
+import { HamburgerButton, Logo, ThemeToggle } from '@/components/ui'
 import { Container } from '@/layouts'
 import { DURATION, EASE, SPRING } from '@/animations'
 import { NAV_LINKS, PERSONAL, SECTION_IDS, SITE } from '@/data'
@@ -145,6 +145,11 @@ export function Header({ className }) {
             </nav>
 
             <div className="flex items-center gap-2">
+              {/* Hidden below sm alongside the résumé button — at that width the
+                  pill is already carrying a logo and a menu toggle, and the
+                  control reappears inside the mobile menu instead. */}
+              <ThemeToggle className="hidden sm:inline-flex" />
+
               <a
                 href={PERSONAL.resumeUrl}
                 className="btn btn-primary btn-sm hidden sm:inline-flex"

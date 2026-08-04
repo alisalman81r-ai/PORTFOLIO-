@@ -1,4 +1,4 @@
-import { PERSONAL } from './personal'
+import { PERSONAL } from './personal.js'
 
 /**
  * Contact section content and form schema.

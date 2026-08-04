@@ -22,17 +22,17 @@
  *   import { PROJECTS, PERSONAL, NAV_LINKS } from '@/data'
  */
 
-export { SITE } from './site'
-export { FOOTER } from './footer'
-export { MEDIA, getProjectMedia } from './media'
-export { PERSONAL } from './personal'
-export { HERO } from './hero'
-export { ABOUT } from './about'
-export { JOURNEY } from './timeline'
-export { NAV_LINKS, FOOTER_LINKS, SECTION_IDS } from './navigation'
-export { SOCIAL_LINKS } from './socials'
-export { SKILL_CATEGORIES, SKILL_LEVELS, ALL_SKILLS, SKILL_COUNT } from './skills'
-export { SKILLS_META } from './skillsMeta'
+export { SITE } from './site.js'
+export { FOOTER } from './footer.js'
+export { MEDIA, getProjectMedia } from './media.js'
+export { PERSONAL } from './personal.js'
+export { HERO } from './hero.js'
+export { ABOUT } from './about.js'
+export { JOURNEY } from './timeline.js'
+export { NAV_LINKS, FOOTER_LINKS, SECTION_IDS } from './navigation.js'
+export { SOCIAL_LINKS } from './socials.js'
+export { SKILL_CATEGORIES, SKILL_LEVELS, ALL_SKILLS, SKILL_COUNT } from './skills.js'
+export { SKILLS_META } from './skillsMeta.js'
 export {
   PROJECTS,
   PROJECTS_SORTED,
@@ -40,14 +40,14 @@ export {
   PROJECT_STATUS,
   getProjectBySlug,
   getProjectsByFilter,
-} from './projects'
-export { PROJECTS_META, PROJECT_FILTERS } from './projectsMeta'
-export { EXPERIENCE, EXPERIENCE_META, EXPERIENCE_TYPES, EDUCATION } from './experience'
-export { SERVICES, SERVICES_META } from './services'
-export { PROCESS_STEPS, PROCESS_META } from './process'
-export { ACHIEVEMENTS, ACHIEVEMENTS_META } from './achievements'
-export { TESTIMONIALS, TESTIMONIALS_META, HAS_TESTIMONIALS } from './testimonials'
-export { POSTS, POSTS_SORTED, FEATURED_POSTS, HAS_POSTS, BLOG_META, getPostBySlug } from './blog'
+} from './projects.js'
+export { PROJECTS_META, PROJECT_FILTERS } from './projectsMeta.js'
+export { EXPERIENCE, EXPERIENCE_META, EXPERIENCE_TYPES, EDUCATION } from './experience.js'
+export { SERVICES, SERVICES_META } from './services.js'
+export { PROCESS_STEPS, PROCESS_META } from './process.js'
+export { ACHIEVEMENTS, ACHIEVEMENTS_META } from './achievements.js'
+export { TESTIMONIALS, TESTIMONIALS_META, HAS_TESTIMONIALS } from './testimonials.js'
+export { POSTS, POSTS_SORTED, FEATURED_POSTS, HAS_POSTS, BLOG_META, getPostBySlug } from './blog.js'
 export {
   CONTACT_META,
   CONTACT_METHODS,
@@ -55,4 +55,4 @@ export {
   FORM_FIELDS,
   FORM_MESSAGES,
   HONEYPOT_FIELD,
-} from './contact'
+} from './contact.js'

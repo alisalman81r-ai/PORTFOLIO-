@@ -30,7 +30,7 @@
  * Rewrite it all; the structure will hold.
  */
 
-import { getProjectMedia } from './media'
+import { getProjectMedia } from './media.js'
 
 /**
  * Delivery status. Drives the badge on the card.

@@ -1,4 +1,4 @@
-import { MEDIA } from './media'
+import { MEDIA } from './media.js'
 
 /**
  * Personal information.

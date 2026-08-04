@@ -36,6 +36,7 @@ export { Modal } from './Modal'
 export { MagneticButton } from './MagneticButton'
 export { TiltCard } from './TiltCard'
 export { HamburgerButton } from './HamburgerButton'
+export { ThemeToggle } from './ThemeToggle'
 
 /* Typography effects */
 export { RotatingText } from './RotatingText'
