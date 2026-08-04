@@ -9,6 +9,7 @@
  */
 
 export { MainLayout } from './MainLayout'
+export { PageTransition } from './PageTransition'
 export { SmoothScroll } from './SmoothScroll'
 export { Container } from './Container'
 export { Section } from './Section'

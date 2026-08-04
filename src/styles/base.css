@@ -97,6 +97,23 @@
     border-radius: 2px;
   }
 
+  /**
+   * Native pointer suppression for the custom cursor.
+   *
+   * Scoped to a `data-cursor` attribute that `<Cursor>` sets on <html> only
+   * once it is actually running — which it refuses to do on a coarse pointer or
+   * under reduced motion. That gating is the whole point: a blanket
+   * `cursor: none` in the stylesheet would leave a visitor with no pointer at
+   * all if the script failed to load, which is unrecoverable without a reload.
+   *
+   * The descendant selector is required — elements set their own cursor
+   * (`button` gets `pointer`, text gets `text`), so the rule has to reach them.
+   */
+  html[data-cursor='custom'],
+  html[data-cursor='custom'] * {
+    cursor: none;
+  }
+
   /* Media should never break its container. */
   img,
   video,

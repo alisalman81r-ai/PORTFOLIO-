@@ -23,6 +23,7 @@
  */
 
 export { SITE } from './site'
+export { FOOTER } from './footer'
 export { PERSONAL } from './personal'
 export { HERO } from './hero'
 export { ABOUT } from './about'

@@ -95,9 +95,67 @@ export const textLineReveal = {
   visible: { y: '0%', transition: { duration: DURATION.slow, ease: EASE.outExpo } },
 }
 
-/** Route-level crossfade, driven by <AnimatePresence mode="wait">. */
+/**
+ * Route-level crossfade, driven by <AnimatePresence mode="wait">.
+ *
+ * Kept as the default export name for backwards compatibility — it is the
+ * `fade` entry of `pageVariants` below.
+ */
 export const pageTransition = {
   initial: { opacity: 0 },
   animate: { opacity: 1, transition: TRANSITION.base },
   exit: { opacity: 0, transition: TRANSITION.fast },
+}
+
+/**
+ * Page transition presets.
+ *
+ * One vocabulary for route changes, so a new page picks a *named feel* rather
+ * than inventing its own numbers. Consumed by `<PageTransition>`.
+ *
+ * Every preset shares two rules:
+ *
+ *   1. EXIT IS FASTER THAN ENTRY. The user has already decided to leave; a
+ *      slow exit reads as the interface not keeping up. With
+ *      `AnimatePresence mode="wait"` the exit is dead time before the new page
+ *      can even start, so it is the cheapest thing to shorten.
+ *   2. TRANSFORM AND OPACITY ONLY. Both are compositor properties, so a full
+ *      page can animate without a single layout or paint pass — which is what
+ *      keeps a route change smooth on a phone.
+ *
+ * Distances are deliberately small. A page that slides half the viewport looks
+ * impressive once and feels slow every time after that.
+ */
+export const pageVariants = {
+  /** Neutral. The safe default — nothing moves, so nothing can feel wrong. */
+  fade: {
+    initial: { opacity: 0 },
+    animate: { opacity: 1, transition: TRANSITION.base },
+    exit: { opacity: 0, transition: TRANSITION.fast },
+  },
+
+  /** Rises into place. Suits content pages that follow a link downward. */
+  slideUp: {
+    initial: { opacity: 0, y: 24 },
+    animate: { opacity: 1, y: 0, transition: TRANSITION.slow },
+    exit: { opacity: 0, y: -12, transition: TRANSITION.fast },
+  },
+
+  /** Enters from the right, leaves to the left — a lateral, sequential feel. */
+  slide: {
+    initial: { opacity: 0, x: 32 },
+    animate: { opacity: 1, x: 0, transition: TRANSITION.slow },
+    exit: { opacity: 0, x: -16, transition: TRANSITION.fast },
+  },
+
+  /**
+   * Settles forward from slightly behind. The most "app-like" of the four.
+   * Scale stays within 2% — beyond that, text visibly resamples mid-animation
+   * and the whole page looks briefly blurred.
+   */
+  scale: {
+    initial: { opacity: 0, scale: 0.985 },
+    animate: { opacity: 1, scale: 1, transition: TRANSITION.slow },
+    exit: { opacity: 0, scale: 1.008, transition: TRANSITION.fast },
+  },
 }

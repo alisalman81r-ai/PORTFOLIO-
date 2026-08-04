@@ -37,4 +37,5 @@ export {
   staggerContainer,
   textLineReveal,
   pageTransition,
+  pageVariants,
 } from './variants'

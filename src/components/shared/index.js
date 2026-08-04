@@ -12,6 +12,11 @@
  */
 
 export { Header } from './Header'
+export { Footer } from './Footer'
+export { Cursor } from './Cursor'
+export { PageLoader } from './PageLoader'
+export { ScrollProgress } from './ScrollProgress'
+export { BackToTop } from './BackToTop'
 export { MobileMenu } from './MobileMenu'
 export { ErrorBoundary } from './ErrorBoundary'
 export { ScrollToTop } from './ScrollToTop'
