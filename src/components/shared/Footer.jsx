@@ -84,10 +84,15 @@ export function Footer() {
             <ul className="mt-5 flex flex-col gap-3">
               {FOOTER_LINKS.map((link) => (
                 <li key={link.id}>
+                  {/* `inline-block py-1` lifts the tap target from 19px to
+                      ~27px. Measured at 19px it failed WCAG 2.5.8's 24x24
+                      minimum — the text was the only hit area, which is
+                      unforgiving on a phone. Padding the anchor costs nothing
+                      visually and makes the row comfortably tappable. */}
                   <a
                     href={link.href}
                     onClick={(event) => handleAnchorClick(event, link.href)}
-                    className="link-underline text-body-sm text-muted transition-colors duration-fast hover:text-ink"
+                    className="link-underline inline-block py-1 text-body-sm text-muted transition-colors duration-fast hover:text-ink"
                   >
                     {link.label}
                   </a>

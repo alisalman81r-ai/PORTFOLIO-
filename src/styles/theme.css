@@ -86,7 +86,12 @@
   /* Content, in descending emphasis. `inverse` is text on an accent fill. */
   --ink: var(--neutral-50);
   --muted: var(--neutral-400);
-  --faint: var(--neutral-500);
+  /* Not `--neutral-500`. At that lightness this measured 3.79:1 against
+     `--elevated` — below the 4.5:1 WCAG AA floor for the 12px eyebrow and
+     metadata text it is used on. Raised until it clears AA on every surface it
+     actually sits on (canvas 5.70, surface 5.58, elevated 4.94) while staying
+     visibly dimmer than `--muted`, so the three-tier hierarchy survives. */
+  --faint: oklch(0.66 0.01 285);
   --inverse: var(--neutral-950);
 
   /* Borders. Alpha rather than solid so they read correctly on any surface. */
@@ -141,16 +146,34 @@
 
   --ink: var(--neutral-950);
   --muted: var(--neutral-600);
-  --faint: var(--neutral-500);
+  /* Same AA problem inverted: `--neutral-500` measured 3.71:1 on the light
+     elevated surface. Darkened until it clears 4.5:1 on white, canvas and
+     elevated alike. */
+  --faint: oklch(0.52 0.011 285);
   --inverse: var(--neutral-0);
 
   --line: oklch(0 0 0 / 0.1);
   --line-strong: oklch(0 0 0 / 0.18);
 
-  /* Darker accent steps — the light-mode versions need more chroma depth to
-     hold contrast against a near-white canvas. */
-  --accent: var(--brand-700);
-  --accent-hover: var(--brand-600);
+  /* ACCENT DOES TWO JOBS, AND ON A LIGHT CANVAS ONE VALUE HAS TO SERVE BOTH:
+     a *fill* with text on top of it, and *small text* on a near-white surface.
+     `--brand-700` failed both — white-on-accent measured 3.68:1 and accent-as-
+     text measured 3.08:1 on the soft tint. Every primary button and every
+     accent label was below AA for anyone whose OS is set to light, which the
+     pre-paint script honours.
+
+     Solving both constraints at once pins the lightness: light enough and the
+     text fails, dark enough and it stops reading as gold. L 0.52 is the value
+     that clears all three roles with margin —
+
+       white on accent            5.56:1
+       accent text on canvas      5.32:1
+       accent text on accent-soft 4.66:1
+
+     Deeper amber than the dark theme's gold, which is correct: the same hue has
+     to work harder against white. Dark mode is untouched. */
+  --accent: oklch(0.52 0.15 78);
+  --accent-hover: oklch(0.46 0.15 78);
   --accent-soft: oklch(0.62 0.15 78 / 0.12);
   --accent-ink: var(--neutral-0);
 

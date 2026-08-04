@@ -13,9 +13,16 @@ import { cn } from '@/utils'
  * -------------------------------------------------------
  * Splitting a sentence into per-word elements destroys it for screen readers:
  * many announce each fragment as a separate item, turning one headline into
- * nine. So the original string is exposed once via `aria-label`, and every
- * generated span is `aria-hidden`. Assistive tech reads the sentence; sighted
- * users get the animation. Text remains real, selectable, and indexable.
+ * nine. So the original string is exposed once, and every generated span is
+ * `aria-hidden`. Assistive tech reads the sentence; sighted users get the
+ * animation.
+ *
+ * The intact copy is a visually-hidden `<span>`, NOT an `aria-label` on the
+ * wrapper. `aria-label` is only permitted on elements with a widget or
+ * landmark role — on a bare `<span>` it is invalid ARIA, and browsers are free
+ * to ignore it. An axe-core audit flagged 24 instances of exactly that here,
+ * which meant the headline's accessible name was resting on something the
+ * platform does not have to honour. Real hidden text always works.
  *
  * WHY WORDS AND NOT CHARACTERS
  * ----------------------------
@@ -81,7 +88,6 @@ export function TextReveal({
 
   return (
     <MotionTag
-      aria-label={text}
       className={cn('inline', className)}
       variants={container}
       {...(animate &&
@@ -90,6 +96,10 @@ export function TextReveal({
           : { initial: 'hidden', animate: 'visible' }))}
       {...rest}
     >
+      {/* The sentence, intact, for assistive tech. Everything below is hidden
+          from it — together they read as one heading rather than N fragments. */}
+      <span className="sr-only">{text}</span>
+
       {words.map((item, index) => (
         <span
           // Words repeat within a sentence, so the index is part of the key.

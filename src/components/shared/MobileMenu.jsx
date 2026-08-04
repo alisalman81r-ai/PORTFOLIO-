@@ -1,10 +1,10 @@
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import { motion } from 'motion/react'
 import { ArrowUpRight } from 'lucide-react'
 
 import { DURATION, EASE, STAGGER } from '@/animations'
 import { NAV_LINKS, PERSONAL, SOCIAL_LINKS } from '@/data'
-import { useAnchorScroll } from '@/hooks'
+import { useAnchorScroll, useFocusTrap } from '@/hooks'
 import { cn } from '@/utils'
 
 /** Panel slides down as a whole; its contents stagger in behind it. */
@@ -59,38 +59,12 @@ export function MobileMenu({ id, onClose, activeId }) {
   const panelRef = useRef(null)
   const handleAnchorClick = useAnchorScroll()
 
-  // Move focus in on open, and keep Tab inside the panel while it is there.
-  useEffect(() => {
-    const node = panelRef.current
-    if (!node) return
-
-    const focusables = node.querySelectorAll('a[href], button:not([disabled])')
-    focusables[0]?.focus()
-
-    const handleKeyDown = (event) => {
-      if (event.key === 'Escape') {
-        onClose()
-        return
-      }
-
-      if (event.key !== 'Tab' || focusables.length === 0) return
-
-      const first = focusables[0]
-      const last = focusables[focusables.length - 1]
-
-      // Wrap at both ends so focus cycles rather than escaping the dialog.
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault()
-        last.focus()
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault()
-        first.focus()
-      }
-    }
-
-    document.addEventListener('keydown', handleKeyDown)
-    return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [onClose])
+  // Focus management is the shared hook's job: it moves focus in on open, wraps
+  // Tab at both ends, closes on Escape, and hands focus back to the trigger on
+  // unmount. This component previously carried its own ~35-line copy of that
+  // logic, written before the hook existed — the duplication is what a review
+  // is for.
+  useFocusTrap(panelRef, { onEscape: onClose })
 
   const handleLinkClick = (event, href) => {
     handleAnchorClick(event, href)

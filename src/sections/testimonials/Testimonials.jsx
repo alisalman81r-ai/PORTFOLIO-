@@ -237,18 +237,34 @@ export function Testimonials() {
           <ul className="flex items-center gap-2">
             {TESTIMONIALS.map((testimonial, index) => (
               <li key={testimonial.id}>
+                {/*
+                  The visible dot is 6px, but the *button* is 24px tall with a
+                  transparent gutter around it. Measured at 6x6 it failed WCAG
+                  2.5.8, which sets a 24x24 minimum target — a 6px tap target is
+                  unusable with a thumb regardless of how it looks. `min-w-6`
+                  covers the width too: padding alone left it 14px across, which
+                  passes on one axis and fails on the other.
+
+                  Padding the control rather than enlarging the dot keeps the
+                  design identical and fixes the ergonomics, which is the right
+                  trade every time.
+                */}
                 <button
                   type="button"
                   onClick={() => scrollToIndex(index)}
                   aria-label={`Go to testimonial ${index + 1}`}
                   aria-current={index === activeIndex ? 'true' : undefined}
-                  className={cn(
-                    'h-1.5 rounded-pill transition-all duration-base ease-out-expo',
-                    index === activeIndex
-                      ? 'w-8 bg-accent'
-                      : 'w-1.5 bg-line-strong hover:bg-muted',
-                  )}
-                />
+                  className="group/dot grid h-6 min-w-6 place-items-center px-1"
+                >
+                  <span
+                    className={cn(
+                      'block h-1.5 rounded-pill transition-all duration-base ease-out-expo',
+                      index === activeIndex
+                        ? 'w-8 bg-accent'
+                        : 'w-1.5 bg-line-strong group-hover/dot:bg-muted',
+                    )}
+                  />
+                </button>
               </li>
             ))}
           </ul>
