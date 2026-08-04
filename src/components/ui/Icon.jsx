@@ -1,11 +1,14 @@
 import {
+  Accessibility,
   ArrowUpRight,
   Atom,
   Building2,
   Check,
   Clapperboard,
   Code2,
+  Database,
   Download,
+  GraduationCap,
   Infinity as InfinityIcon,
   Layers,
   MonitorSmartphone,
@@ -15,6 +18,7 @@ import {
   Sparkles,
   Sprout,
   User,
+  Wrench,
   Zap,
 } from 'lucide-react'
 
@@ -49,11 +53,15 @@ const REGISTRY = {
   storyboard: Clapperboard,
   infinity: InfinityIcon,
 
-  // Pillars
+  // Pillars + skill categories
   monitor: MonitorSmartphone,
   server: Server,
   palette: Palette,
   puzzle: Puzzle,
+  database: Database,
+  wrench: Wrench,
+  graduation: GraduationCap,
+  accessibility: Accessibility,
 
   // General
   code: Code2,
