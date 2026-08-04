@@ -44,6 +44,27 @@ export function formatMonthYear(iso, { locale = 'en', month = 'short' } = {}) {
 }
 
 /**
+ * Format a full date as '18 November 2025'.
+ *
+ * Separate from `formatMonthYear` because a blog post needs day precision while
+ * a job on a timeline does not — and a single function with a mode flag reads
+ * worse than two that each do one thing.
+ *
+ * @param {string} iso ISO 'YYYY-MM-DD'.
+ * @param {object} [options]
+ * @param {string} [options.locale='en-GB']
+ * @param {'short'|'long'} [options.month='long']
+ * @returns {string} Empty string for unparseable input, so a bad date never
+ *   renders as 'Invalid Date'.
+ */
+export function formatDate(iso, { locale = 'en-GB', month = 'long' } = {}) {
+  const date = parseIsoMonth(iso)
+  if (!date) return ''
+
+  return new Intl.DateTimeFormat(locale, { day: 'numeric', month, year: 'numeric' }).format(date)
+}
+
+/**
  * Format a start/end pair as a range: 'Mar 2024 — Present'.
  *
  * A null `end` means the role is current, so "Present" is computed rather than

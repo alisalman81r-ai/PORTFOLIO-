@@ -44,4 +44,12 @@ export { EXPERIENCE, EXPERIENCE_META, EXPERIENCE_TYPES, EDUCATION } from './expe
 export { SERVICES, SERVICES_META } from './services'
 export { PROCESS_STEPS, PROCESS_META } from './process'
 export { ACHIEVEMENTS, ACHIEVEMENTS_META } from './achievements'
-export { TESTIMONIALS, HAS_TESTIMONIALS } from './testimonials'
+export { TESTIMONIALS, TESTIMONIALS_META, HAS_TESTIMONIALS } from './testimonials'
+export { POSTS, POSTS_SORTED, FEATURED_POSTS, HAS_POSTS, BLOG_META, getPostBySlug } from './blog'
+export {
+  CONTACT_META,
+  CONTACT_METHODS,
+  FORM_FIELDS,
+  FORM_MESSAGES,
+  HONEYPOT_FIELD,
+} from './contact'

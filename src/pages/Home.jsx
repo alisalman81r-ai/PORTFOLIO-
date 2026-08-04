@@ -36,6 +36,9 @@ const Services = lazySection(() => import('@/sections/services'), 'Services')
 const Process = lazySection(() => import('@/sections/process'), 'Process')
 const Experience = lazySection(() => import('@/sections/experience'), 'Experience')
 const Achievements = lazySection(() => import('@/sections/Achievements'), 'Achievements')
+const Testimonials = lazySection(() => import('@/sections/testimonials'), 'Testimonials')
+const Blog = lazySection(() => import('@/sections/blog'), 'Blog')
+const Contact = lazySection(() => import('@/sections/contact'), 'Contact')
 
 /**
  * Fallback for a section still in flight.
@@ -94,9 +97,19 @@ export default function Home() {
         <Achievements />
       </Suspense>
 
-      {/* <Testimonials /> id="testimonials" */}
-      {/* <Blog />         id="blog"         */}
-      {/* <Contact />      id="contact"      */}
+      <Suspense fallback={<Placeholder />}>
+        <Testimonials />
+      </Suspense>
+
+      <Suspense fallback={<Placeholder />}>
+        <Blog />
+      </Suspense>
+
+      <Suspense fallback={<Placeholder />}>
+        <Contact />
+      </Suspense>
+
+      {/* <Footer /> */}
     </>
   )
 }

@@ -21,6 +21,9 @@ export { usePrefersReducedMotion } from './usePrefersReducedMotion'
 export { useScrollDirection } from './useScrollDirection'
 export { useLockScroll } from './useLockScroll'
 export { useFocusTrap } from './useFocusTrap'
+
+/* Forms */
+export { useForm } from './useForm'
 export { useActiveSection } from './useActiveSection'
 export { useAnchorScroll } from './useAnchorScroll'
 

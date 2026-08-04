@@ -17,6 +17,7 @@ export { clamp, lerp, damp, progress, mapRange, roundTo } from './math'
 /* Display formatting for stored values */
 export {
   formatMonthYear,
+  formatDate,
   formatDateRange,
   formatDuration,
   padIndex,

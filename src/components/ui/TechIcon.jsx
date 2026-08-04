@@ -1,5 +1,7 @@
+import { FaLinkedinIn } from 'react-icons/fa6'
 import {
   SiCss,
+  SiDribbble,
   SiDocker,
   SiExpress,
   SiFigma,
@@ -17,6 +19,7 @@ import {
   SiTailwindcss,
   SiTypescript,
   SiVercel,
+  SiX,
 } from 'react-icons/si'
 
 import { Icon } from './Icon'
@@ -52,6 +55,13 @@ const BRAND_MARKS = {
   postgresql: SiPostgresql,
   prisma: SiPrisma,
   docker: SiDocker,
+
+  // Social. LinkedIn comes from Font Awesome because Simple Icons removed the
+  // mark at LinkedIn's request — and lucide carries no brand icons at all.
+  // One icon from a third set, tree-shaken to just that glyph.
+  linkedin: FaLinkedinIn,
+  twitter: SiX,
+  dribbble: SiDribbble,
 }
 
 /**
