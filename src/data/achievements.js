@@ -1,3 +1,4 @@
+import { JOURNEY_START_YEAR } from './timeline.js'
 import { PROJECTS } from './projects.js'
 import { ALL_SKILLS } from './skills.js'
 
@@ -14,12 +15,16 @@ import { ALL_SKILLS } from './skills.js'
  * Prefer deriving. If a number can be counted from data the site already holds,
  * count it.
  *
- * ⚠️ THE OTHER TWO ARE PLACEHOLDERS. `repositories` and `learningHours` cannot
- * be derived from anything here, so they carry round placeholder values purely
- * so the counter animation has something to run against. They are claims about
- * you. Replace them with real figures or delete the entries — a portfolio
- * asserting "500 learning hours" it cannot support is worse than one that
- * shows three honest numbers.
+ * A third is now derived too: years of experience counts from
+ * `JOURNEY_START_YEAR` in `timeline.js`, so it advances on its own every year
+ * and can never contradict the timeline printed above it. A hardcoded "3 years"
+ * is wrong within twelve months and stays wrong.
+ *
+ * ⚠️ ONE PLACEHOLDER REMAINS. `repositories` cannot be derived from anything
+ * here, so it carries a round placeholder purely so the counter has something to
+ * run against. It is a claim about you — replace it with your real public repo
+ * count, or delete the entry. Three verifiable numbers beat four where one is
+ * invented.
  */
 
 export const ACHIEVEMENTS_META = {
@@ -71,13 +76,13 @@ export const ACHIEVEMENTS = [
     derived: false,
   },
   {
-    id: 'learning-hours',
+    id: 'experience',
     icon: 'clock',
-    // PLACEHOLDER — replace, or delete this entry entirely.
-    value: 500,
+    // Counts from the first entry in the journey, so it advances by itself.
+    value: Math.max(1, new Date().getFullYear() - JOURNEY_START_YEAR),
     suffix: '+',
-    label: 'Learning hours',
-    detail: 'Deliberate practice outside project work',
-    derived: false,
+    label: 'Years in design & code',
+    detail: `Designing since ${JOURNEY_START_YEAR}, building since 2024`,
+    derived: true,
   },
 ]

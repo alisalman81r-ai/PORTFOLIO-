@@ -5,10 +5,10 @@
  * this covers how you think and how you work — which is what a client is
  * actually deciding on.
  *
- * PLACEHOLDER — the prose below is written as real, usable copy so the layout
- * can be judged with true line lengths, and it makes only claims about approach
- * rather than about achievements. Rewrite it in your own voice; nothing here
- * asserts a fact that could be wrong.
+ * The narrative arc here is yours — design from 2022, code from 2024 — so it
+ * does now assert history rather than only approach. The wording is mine and
+ * should be rewritten in your voice; the facts underneath it came from you and
+ * match `timeline.js`. If you change one, change both.
  */
 
 export const ABOUT = {
@@ -20,22 +20,21 @@ export const ABOUT = {
    * gradient fill. One emphasised phrase per heading, never more.
    */
   headline: [
-    { text: 'I care about how' },
-    { text: 'things feel', accent: true },
-    { text: 'to use' },
+    { text: 'I design it,' },
+    { text: 'then I build it', accent: true },
   ],
 
   /** Lead paragraph — sits directly under the heading, slightly larger. */
   intro:
-    'I am a frontend developer who treats the interface as the product. Not a layer painted over the real work — the place where the work either makes sense to someone or does not.',
+    'I started in graphic design and ended up writing the code as well. Both halves inform each other: the design is buildable because I know what it costs, and the build is faithful because I drew it.',
 
   /**
    * Story paragraphs. Two is the right length here: enough to establish a point
    * of view, short enough that it actually gets read.
    */
   story: [
-    'Most of what I do sits between design and engineering. I like the problems that live there — why a layout stops working at an awkward width, why a transition feels heavy, why a form that validates correctly still feels hostile to fill in.',
-    'I build in systems rather than screens: shared tokens, reusable components, motion that follows one set of rules. It makes the work faster to extend and, more importantly, it makes the result feel like one thing instead of many.',
+    'Four years ago that meant Photoshop and Illustrator — composition, type, colour, and learning why some layouts work and others merely fill space. Interface design came next, then the code to build it.',
+    'What carried across was the systems thinking. I build in tokens and components rather than screens, so the second page costs less than the first — and the whole thing reads as one considered object instead of a stack of separate decisions.',
   ],
 
   /**
@@ -47,7 +46,7 @@ export const ABOUT = {
     'Accessible by default — semantic markup, keyboard paths, reduced-motion support',
     'Performance treated as a feature, with a budget rather than a hope',
     'Design systems over one-off screens, so the second page costs less than the first',
-    'Comfortable owning a feature from interface through to data',
+    'Design and build in one pair of hands — no handoff, no translation loss',
   ],
 
   /**
@@ -67,16 +66,16 @@ export const ABOUT = {
     {
       id: 'backend',
       icon: 'server',
-      title: 'Backend Basics',
+      title: 'Backend & Full Stack',
       description:
-        'APIs, data modelling and deployment — enough depth to design a sensible contract with the backend instead of working around it.',
+        'Node, Express, databases and deployment — enough depth to design a sensible contract with the server instead of working around whatever it returns.',
     },
     {
       id: 'design',
-      icon: 'palette',
-      title: 'UI/UX Focus',
+      icon: 'brush',
+      title: 'Design & Visual Craft',
       description:
-        'Type, spacing, hierarchy and motion as one system. I care whether an interface reads clearly before I care whether it looks impressive.',
+        'Graphic design through to interface: composition, type, colour and motion as one system. Whether it reads clearly matters before whether it looks impressive.',
     },
     {
       id: 'problem-solving',
@@ -94,26 +93,19 @@ export const ABOUT = {
    * the full matrix for a dedicated Skills section; this is the six things worth
    * saying in a paragraph of context. Different jobs, so different data.
    */
-  techStack: [
-    'React',
-    'Next.js',
-    'JavaScript',
-    'Tailwind CSS',
-    'GSAP',
-    'Node.js',
-  ],
+  techStack: ['Figma', 'Photoshop', 'React', 'Next.js', 'Tailwind CSS', 'Node.js'],
 
   /** Floating chips over the portrait. Decorative — keep them short. */
   portraitChips: [
-    { id: 'craft', icon: 'code', label: 'Clean code' },
-    { id: 'motion', icon: 'sparkles', label: 'Thoughtful motion' },
+    { id: 'design', icon: 'brush', label: 'Design first' },
+    { id: 'code', icon: 'code', label: 'Then code' },
   ],
 
   /** Heading for the journey block. */
   journey: {
     badge: 'The Path',
-    title: 'Developer Journey',
+    title: 'Creative Journey',
     description:
-      'How I got from a blank HTML file to shipping interfaces people rely on.',
+      'From Photoshop in 2022 to shipping full-stack projects — the short version.',
   },
 }

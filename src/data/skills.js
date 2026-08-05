@@ -9,6 +9,9 @@
  * and is the single most-mocked convention in portfolio design. `level` is a
  * coarse, honest band instead.
  *
+ * Ordered roughly as the skills were acquired: design first, then interface,
+ * then code. See `timeline.js` for the same arc as a dated journey.
+ *
  * ⚠️ REVIEW THE LEVELS. They are an opening estimate inferred from the stack
  * and journey you described, not a measurement. `learning` is yours — you named
  * those four. Adjust the rest; each one is a claim you may be asked about.
@@ -187,6 +190,43 @@ export const SKILL_CATEGORIES = [
     ],
   },
   {
+    id: 'graphic-design',
+    label: 'Graphic Design',
+    icon: 'brush',
+    summary:
+      'Where I started, and still the reason I notice when spacing is off. Composition, type and colour worked out in a design tool before anything reaches a browser.',
+    items: [
+      {
+        id: 'photoshop',
+        name: 'Adobe Photoshop',
+        icon: 'photoshop',
+        description: 'Raster work — retouching, compositing, and preparing assets for the web.',
+        level: 'core',
+      },
+      {
+        id: 'illustrator',
+        name: 'Adobe Illustrator',
+        icon: 'illustrator',
+        description: 'Vector work — logos, icons and marks that stay sharp at any size.',
+        level: 'working',
+      },
+      {
+        id: 'figma',
+        name: 'Figma',
+        icon: 'figma',
+        description: 'Interface design, components and specs — the bridge from design into code.',
+        level: 'core',
+      },
+      {
+        id: 'canva',
+        name: 'Canva',
+        icon: 'canva',
+        description: 'Fast turnarounds for social and print when a full design file is overkill.',
+        level: 'working',
+      },
+    ],
+  },
+  {
     id: 'tools',
     label: 'Tools',
     icon: 'wrench',
@@ -213,13 +253,6 @@ export const SKILL_CATEGORIES = [
         icon: 'code',
         description: 'Daily driver — configured for fast navigation and refactors.',
         level: 'core',
-      },
-      {
-        id: 'figma',
-        name: 'Figma',
-        icon: 'figma',
-        description: 'Reading and building design files, components, and specs.',
-        level: 'working',
       },
       {
         id: 'vercel',

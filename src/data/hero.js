@@ -52,8 +52,8 @@ export const HERO = {
    * Keep them a similar length — the container reserves width for the longest,
    * so one outlier leaves a visible gap beside all the others.
    */
-  subtitlePrefix: 'Frontend engineer crafting',
-  subtitleRotating: ['interfaces', 'interactions', 'experiences', 'systems'],
+  subtitlePrefix: 'Designer and developer crafting',
+  subtitleRotating: ['interfaces', 'identities', 'experiences', 'systems'],
 
   description:
     'I design and build fast, accessible web experiences where motion has a purpose and every detail is deliberate — from the first pixel to the last frame.',

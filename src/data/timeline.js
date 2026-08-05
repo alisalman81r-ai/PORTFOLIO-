@@ -1,5 +1,5 @@
 /**
- * Developer journey — the milestone timeline.
+ * Creative journey — the milestone timeline.
  *
  * ADDING A MILESTONE
  * ------------------
@@ -10,9 +10,15 @@
  *
  * Order is chronological, oldest first. The component reads it top to bottom.
  *
- * ⚠️ YEARS ARE PLACEHOLDERS. Every entry reads `20XX` because the real dates
- * are yours and inventing them would put fabricated claims on a page recruiters
- * read. Replace each one. `Current` on the last entry is real and can stay.
+ * THE ARC THIS DESCRIBES
+ * Design → interface → frontend → backend → shipping. That progression is the
+ * story worth telling, because it explains *why* the work looks the way it
+ * does: someone who started in Photoshop notices different things than someone
+ * who started in a terminal. `skills.js` groups the same arc by discipline, and
+ * `experience.js` gives it dated context.
+ *
+ * The final entry is marked `current`, which highlights its node and stops the
+ * progress rail there. Move the flag when the next chapter starts.
  */
 
 /**
@@ -30,52 +36,55 @@
 /** @type {Milestone[]} */
 export const JOURNEY = [
   {
-    id: 'started-learning',
-    year: '20XX',
-    title: 'Started Learning Web Development',
+    id: 'graphic-design',
+    year: '2022',
+    title: 'Started Learning Graphic Design',
     description:
-      'Began with HTML, CSS and JavaScript fundamentals — building small static pages until layout and the box model stopped being guesswork.',
-    icon: 'sprout',
+      'Began with Photoshop, Illustrator and Canva, and with the fundamentals underneath them — composition, hierarchy, type and colour. Learning to see why a layout works before learning to build one.',
+    icon: 'brush',
   },
   {
-    id: 'first-react-project',
-    year: '20XX',
-    title: 'Built First React Project',
+    id: 'ui-ux',
+    year: '2023',
+    title: 'UI/UX & Figma',
     description:
-      'Moved from pages to components. Learned state, props and the render cycle by building something end to end rather than following along.',
-    icon: 'atom',
+      'Moved from static compositions to interfaces: layouts, components, type scales, colour systems and responsive behaviour. Design stopped being one picture and became a system.',
+    icon: 'handoff',
   },
   {
-    id: 'learned-nextjs',
-    year: '20XX',
-    title: 'Learned Next.js',
+    id: 'frontend',
+    year: '2024',
+    title: 'Frontend Development',
     description:
-      'Added routing, server rendering and file-based structure — and started thinking about performance and SEO as part of the build, not an afterthought.',
-    icon: 'layers',
-  },
-  {
-    id: 'construction-website',
-    year: '20XX',
-    title: 'Built Construction Website',
-    description:
-      'Delivered a client-facing marketing site with a content structure the client could maintain, and a layout that held up from mobile to desktop.',
-    icon: 'building',
-  },
-  {
-    id: 'storyboard-design',
-    year: '20XX',
-    title: 'Created Storyboard Design for Client',
-    description:
-      'Worked ahead of implementation — mapping the narrative and visual flow before a line of code, so the build started from a decision rather than a blank page.',
-    icon: 'storyboard',
+      'Started building what I had been designing — HTML, CSS and JavaScript first, then Tailwind CSS, React and Next.js. The gap between a design file and a working page closed.',
+    icon: 'frontend',
   },
   {
     id: 'full-stack',
-    year: 'Current',
-    title: 'Continuously Learning Full Stack Development',
+    year: '2025',
+    title: 'Backend & Full Stack Development',
     description:
-      'Extending into APIs, databases and deployment so I can reason about a feature from the interface all the way down to the data.',
-    icon: 'infinity',
+      'Node.js, Express, databases and APIs, plus the workflow around them: Git, GitHub and deployment. Enough of the back end to reason about a feature from the interface down to the data.',
+    icon: 'server',
+  },
+  {
+    id: 'shipping',
+    year: '2026',
+    title: 'Building Real Projects',
+    description:
+      'Production work: client sites, this portfolio, and the habit of finishing things properly — accessible, fast, and maintainable by whoever picks them up next.',
+    icon: 'briefcase',
     current: true,
   },
 ]
+
+/**
+ * The year the journey began.
+ *
+ * Exported so anything that needs "how long has this been going" derives it
+ * rather than restating it — see `achievements.js`. One place to edit means the
+ * figure can never contradict the timeline above it.
+ *
+ * @type {number}
+ */
+export const JOURNEY_START_YEAR = Number(JOURNEY[0].year)

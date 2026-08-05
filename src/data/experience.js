@@ -14,10 +14,10 @@
  * and the component uses it when `start` is absent. Fill in `start`/`end` and
  * delete `period` — nothing else changes.
  *
- * ⚠️ PLACEHOLDER. The four entries are the ones you named; the periods are
- * `20XX` because the real dates are yours and inventing them would put
- * fabricated claims on a page recruiters read. Descriptions are generic
- * scaffolding shaped to each entry type.
+ * ⚠️ REVIEW THE PERIODS. The four entries are the ones you named, and the years
+ * now follow the journey in `timeline.js` (design from 2022, code from 2024)
+ * rather than reading `20XX`. They are inferred from that arc, not recorded —
+ * check each one against what actually happened before publishing.
  */
 
 export const EXPERIENCE_META = {
@@ -58,7 +58,7 @@ export const EXPERIENCE = [
     id: 'freelance',
     role: 'Freelance Web Developer',
     context: 'Independent',
-    period: '20XX — Present',
+    period: '2025 — Present',
     type: 'freelance',
     current: true,
     description:
@@ -74,7 +74,7 @@ export const EXPERIENCE = [
     id: 'client-storyboard',
     role: 'Client Storyboard Project',
     context: 'Klyra',
-    period: '20XX',
+    period: '2025',
     type: 'client',
     description:
       'Narrative and visual direction for a client project — mapping the sequence, pacing and motion intent before implementation started, so the build began from a decision rather than a blank page.',
@@ -89,10 +89,10 @@ export const EXPERIENCE = [
     id: 'personal-projects',
     role: 'Personal Projects',
     context: 'Self-directed',
-    period: '20XX — Present',
+    period: '2022 — Present',
     type: 'personal',
     description:
-      'Projects built to learn something specific rather than to a brief. Where I try the approach that would be too risky to trial on a client deadline.',
+      'Started as design exercises in 2022 and became build exercises once the code caught up. Where I try the approach that would be too risky to trial on a client deadline.',
     highlights: [
       'Full ownership of architecture decisions and their consequences',
       'Where new tools get evaluated before they reach client work',
@@ -104,7 +104,7 @@ export const EXPERIENCE = [
     id: 'continuous-learning',
     role: 'Continuous Learning',
     context: 'Ongoing',
-    period: '20XX — Present',
+    period: '2022 — Present',
     type: 'learning',
     current: true,
     description:

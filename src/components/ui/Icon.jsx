@@ -6,6 +6,7 @@ import {
   Award,
   Blocks,
   BookOpen,
+  Brush,
   Briefcase,
   Atom,
   Building2,
@@ -24,6 +25,7 @@ import {
   Flag,
   FolderGit2,
   Gauge,
+  ImageIcon,
   Images,
   LoaderCircle,
   Mail,
@@ -36,6 +38,7 @@ import {
   MonitorSmartphone,
   Lightbulb,
   Palette,
+  PenTool,
   PencilRuler,
   Phone,
   Quote,
@@ -44,6 +47,7 @@ import {
   Route,
   Search,
   Send,
+  Shapes,
   Server,
   ShieldCheck,
   Smartphone,
@@ -121,6 +125,19 @@ const REGISTRY = {
   results: Trophy,
   target: Target,
   milestone: Flag,
+
+  // Design tools.
+  //
+  // Adobe had its marks removed from Simple Icons, and Canva's is absent too,
+  // so these fall through to generic glyphs rather than borrowing another
+  // product's logo — Creative Cloud's mark is not Photoshop's, and using it for
+  // both Photoshop and Illustrator would misidentify two tools at once.
+  // The card title carries the identity; the glyph only has to read as "raster",
+  // "vector" or "layout".
+  brush: Brush,
+  photoshop: ImageIcon,
+  illustrator: PenTool,
+  canva: Shapes,
 
   // Services
   frontend: CodeXml,

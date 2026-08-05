@@ -33,22 +33,23 @@ import { MEDIA } from './media.js'
  * @property {string} avatar        Portrait path. Import from @/assets/images.
  * @property {boolean} available    Drives the "available for work" indicator.
  * @property {string} availableFrom Human-readable availability note.
- * @property {number} yearsExperience Derived stats belong in components, but this
- *   one is a claim, not a calculation — keep it explicit and accurate.
+ * Note: there is no `yearsExperience` field. It is derived from
+ * `JOURNEY_START_YEAR` in `timeline.js` — see `achievements.js` — so the figure
+ * advances on its own and can never contradict the timeline beside it.
  */
 
 /** @type {Personal} */
 export const PERSONAL = {
   name: 'Your Name',
   firstName: 'Your',
-  role: 'Frontend Developer',
-  tagline: 'I build fast, accessible web interfaces for people who care how things feel.',
+  role: 'Graphic Designer & Frontend Developer',
+  tagline: 'I design it, then I build it — interfaces that look considered and hold up under real use.',
 
   bioShort:
-    'Frontend developer working across React and modern CSS, with a bias toward interfaces that stay fast and legible under real conditions.',
+    'Designer turned developer. I started in Photoshop and Illustrator, moved into interface design, and now build the things I design in React — which means the handoff between the two is a conversation with myself.',
   bioLong: [
-    'I work in the space between design and engineering — component architecture, motion, and the details that decide whether an interface feels considered or merely finished.',
-    'Most of what I build is client and self-directed frontend work. I am currently extending into types, relational data and deployment, so I can own a feature from the interface down to the database.',
+    'I came to code through design, which shapes how I work: I notice the half-pixel misalignment and the transition that feels a frame too slow, because I spent two years learning to see those things before I could build them.',
+    'These days most of my work is frontend — React, Next.js and Tailwind — with enough Node, Express and database work behind it to take a feature from interface to data. Still designing, still building, increasingly both on the same project.',
   ].join('\n\n'),
 
   location: 'Your City, Country',
@@ -63,5 +64,4 @@ export const PERSONAL = {
   available: true,
   availableFrom: 'Available for new projects',
 
-  yearsExperience: 0,
 }
