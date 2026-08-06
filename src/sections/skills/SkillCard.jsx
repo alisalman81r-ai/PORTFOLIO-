@@ -8,10 +8,20 @@ import { DURATION, EASE } from '@/animations'
 import { SKILL_LEVELS } from '@/data'
 import { cn } from '@/utils'
 
-/** Entrance variant. Consumed by the grid's `staggerChildren`. */
+/**
+ * Entrance variant. Consumed by the grid's `staggerChildren`.
+ *
+ * Settles forward rather than rising: these are discrete objects in a grid, and
+ * scale reads as "arriving into place" where a slide reads as "coming from
+ * somewhere else". See the vector guide in `animations/variants.js`.
+ */
 const card = {
-  hidden: { opacity: 0, y: 16 },
-  visible: { opacity: 1, y: 0, transition: { duration: DURATION.base, ease: EASE.outExpo } },
+  hidden: { opacity: 0, scale: 0.96 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: { duration: DURATION.base, ease: EASE.outExpo },
+  },
 }
 
 /**

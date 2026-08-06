@@ -1,5 +1,6 @@
 import { MotionConfig } from 'motion/react'
 
+import { AppReadyProvider } from './AppReadyProvider'
 import { ThemeProvider } from './ThemeProvider'
 import { EASE, DURATION } from '@/animations'
 
@@ -14,6 +15,10 @@ import { EASE, DURATION } from '@/animations'
  *   automatically, disabling transform/layout animation while keeping opacity.
  *   This is the JS counterpart to the CSS media query in `styles/base.css`.
  * - `transition` sets the default curve, so components only specify what differs.
+ *
+ * `AppReadyProvider` sits inside `MotionConfig` and outside everything that
+ * animates: it publishes when the first-load loader has finished, which the hero
+ * waits for before playing its entrance.
  */
 export function AppProviders({ children }) {
   return (
@@ -22,7 +27,7 @@ export function AppProviders({ children }) {
         reducedMotion="user"
         transition={{ duration: DURATION.base, ease: EASE.outExpo }}
       >
-        {children}
+        <AppReadyProvider>{children}</AppReadyProvider>
       </MotionConfig>
     </ThemeProvider>
   )

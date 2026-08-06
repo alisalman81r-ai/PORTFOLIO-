@@ -17,6 +17,25 @@ import { DURATION, EASE, STAGGER, TRANSITION } from './transitions'
  *
  * A parent with `staggerContainer` propagates `hidden`/`visible` to children
  * automatically — children need `variants` but not their own `initial`.
+ *
+ * CHOOSING AN ENTRANCE VECTOR
+ * ---------------------------
+ * Every variant here shares one easing vocabulary and one set of durations, so
+ * the site reads as a single motion language. What varies is the *direction*,
+ * and it is chosen by what the content is — not for variety's sake:
+ *
+ *   fadeInUp     Sequential, narrative content read top to bottom — timelines,
+ *                paragraphs, list items. Rising matches reading direction.
+ *   scaleIn      Discrete objects in a grid — skill cards, stat tiles. They
+ *                settle forward into place rather than sliding from elsewhere.
+ *   maskReveal   Editorial content led by imagery — article covers. A wipe is
+ *                the print idiom, and it suits a picture better than a slide.
+ *   slideIn      Laterally-composed rows — the alternating project showcase,
+ *                where copy and media converge from opposite sides.
+ *
+ * Applying one variant everywhere is what makes a long page feel like the same
+ * animation eleven times; applying them arbitrarily makes it feel unplanned.
+ * Matching the vector to the content is what keeps it deliberate.
  */
 
 /** Opacity only. The safe default when transform would fight a layout. */

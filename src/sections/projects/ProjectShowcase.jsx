@@ -33,6 +33,32 @@ const copyItem = {
 }
 
 /**
+ * Technology badges arrive one at a time rather than as a single block.
+ *
+ * A row of six chips appearing together reads as one rectangle; sequenced, it
+ * reads as a list being filled in — and the tail of the stagger lands just as
+ * the eye finishes the description above it. The interval is deliberately
+ * shorter than the section stagger (40ms against 80ms): these are small,
+ * adjacent items, and the same spacing that feels considered on cards feels slow
+ * on chips.
+ *
+ * The container holds no visual state; it only schedules its children.
+ */
+const badgeGroup = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.04, delayChildren: 0.1 } },
+}
+
+const badge = {
+  hidden: { opacity: 0, scale: 0.85 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: { duration: DURATION.fast, ease: EASE.outExpo },
+  },
+}
+
+/**
  * A link button that degrades to a disabled control when no URL exists.
  *
  * The alternative — hiding the button — leaves an inconsistent row of actions
@@ -172,9 +198,12 @@ export const ProjectShowcase = memo(function ProjectShowcase({
             ))}
           </motion.ul>
 
-          <motion.ul variants={copyItem} className="mt-6 flex flex-wrap gap-2">
+          <motion.ul variants={badgeGroup} className="mt-6 flex flex-wrap gap-2">
             {project.technologies.map((tech) => (
-              <Tag as="li" key={tech}>
+              // `as={motion.li}` rather than a wrapper element — Tag spreads
+              // `...rest`, so the variant reaches the motion component without
+              // adding a node whose only job is to animate.
+              <Tag as={motion.li} variants={badge} key={tech}>
                 {tech}
               </Tag>
             ))}

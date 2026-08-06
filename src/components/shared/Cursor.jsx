@@ -15,6 +15,9 @@ const TARGETS = [
   { selector: 'a[href], button, [role="button"], input, textarea, select, label', state: 'action' },
   { selector: '.card, [data-cursor="card"]', state: 'card' },
   { selector: 'img, video, [data-cursor="image"]', state: 'image' },
+  // Last, so anything interactive above wins. A heading inside a link should
+  // read as a link — clicking is what will happen.
+  { selector: 'p, h1, h2, h3, h4, h5, h6, li, blockquote, [data-cursor="text"]', state: 'text' },
 ]
 
 /**
@@ -29,6 +32,10 @@ const RING_SCALE = {
   action: 'scale-[1.9]',
   card: 'scale-[2.6]',
   image: 'scale-[3.2]',
+  // Collapses toward an I-beam rather than growing — over copy the cursor
+  // should get out of the way, not announce itself. Width is handled
+  // separately below.
+  text: 'scale-y-[1.6] scale-x-[0.12]',
 }
 
 /**
@@ -55,6 +62,11 @@ const RING_SCALE = {
  *   - The pointer is coarse. A touch device has no hover position, so the cursor
  *     would sit frozen wherever the last tap landed.
  *   - Motion is reduced. A trailing element is continuous motion by definition.
+ *
+ * STATES
+ * `action` on anything clickable, `card` and `image` on content surfaces, and
+ * `text` over copy — where the ring collapses to a caret and the dot disappears,
+ * because over a paragraph the cursor's job is to stay out of the way.
  *
  * In both cases the component renders nothing *and* never hides the native
  * cursor — the `data-cursor` attribute that does that is only set once this is
@@ -162,6 +174,8 @@ export function Cursor() {
             state === 'action' && 'border-accent/70 bg-accent/10',
             state === 'card' && 'border-ink/25',
             state === 'image' && 'border-ink/20 bg-ink/5',
+            // As a caret the ring reads better filled and squared off.
+            state === 'text' && 'rounded-sm border-transparent bg-ink/50',
           )}
         />
       </span>
@@ -174,8 +188,10 @@ export function Cursor() {
             !visible && 'opacity-0',
             state === 'action' && 'bg-accent',
             // Over a card or image the dot sits on top of content; shrinking it
-            // leaves the ring as the only signal.
+            // leaves the ring as the only signal. Over text it would sit in the
+            // middle of a glyph, so it goes entirely.
             (state === 'card' || state === 'image') && 'scale-50',
+            state === 'text' && 'scale-0',
           )}
         />
       </span>

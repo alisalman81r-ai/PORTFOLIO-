@@ -4,13 +4,26 @@ import { ArrowDown, ArrowRight, Mail } from 'lucide-react'
 import { HeroBackground } from './HeroBackground'
 import { HeroVisual } from './HeroVisual'
 import { Section } from '@/layouts'
-import { TextReveal } from '@/components/animations'
+import { Parallax, TextReveal } from '@/components/animations'
 import { MagneticButton, RotatingText } from '@/components/ui'
+import { useAppReady } from '@/hooks'
 import { DURATION, EASE, STAGGER } from '@/animations'
 import { HERO, PERSONAL } from '@/data'
 import { cn } from '@/utils'
 
 const CTA_ICONS = { arrow: ArrowRight, mail: Mail }
+
+/**
+ * Seconds the entrance waits after the loader starts lifting.
+ *
+ * The cover fades over `DURATION.slow`. Starting the sequence the instant that
+ * fade begins is not enough: measured, the badge finished animating on the same
+ * frame the cover reached zero opacity, so the whole move happened behind a panel
+ * that was still mostly opaque. Half the fade puts the motion in the clear while
+ * the two still overlap — a full wait would leave a dead beat where the visitor
+ * looks at a finished, static stage before anything happens.
+ */
+const HANDOFF = DURATION.slow / 2
 
 /**
  * Entrance choreography.
@@ -22,11 +35,19 @@ const CTA_ICONS = { arrow: ArrowRight, mail: Mail }
  *
  * `delayChildren` holds the sequence back briefly so the background gradients
  * establish the space before content arrives on top of it.
+ *
+ * THE SEQUENCE WAITS FOR THE LOADER
+ * It is gated on `isReady` rather than starting at mount. Measured before that
+ * gate existed, the entrance ran 1139–1851ms while the loader lifted at 2301ms:
+ * the whole thing, start to finish, played behind an opaque cover and every
+ * visitor arrived at a hero that was already finished. Held back, it begins as
+ * the cover fades — the two read as one continuous move rather than a reveal of
+ * something static.
  */
 const content = {
   hidden: {},
   visible: {
-    transition: { staggerChildren: STAGGER.base, delayChildren: 0.15 },
+    transition: { staggerChildren: STAGGER.base, delayChildren: 0.15 + HANDOFF },
   },
 }
 
@@ -56,6 +77,12 @@ const item = {
  * viewport-height and pads itself around the fixed header.
  */
 export function Hero() {
+  const { isReady } = useAppReady()
+  // `animate` flips label rather than the element mounting late: the content is
+  // in the DOM and laid out from the first paint, so nothing reflows when it
+  // plays and the markup is there for anything reading the page without it.
+  const entrance = isReady ? 'visible' : 'hidden'
+
   return (
     <Section
       id="home"
@@ -74,7 +101,7 @@ export function Hero() {
         <motion.div
           variants={content}
           initial="hidden"
-          animate="visible"
+          animate={entrance}
           className="lg:col-span-6 xl:col-span-6"
         >
           {/* Availability badge */}
@@ -108,7 +135,8 @@ export function Hero() {
               <span key={line.text} className="block">
                 <TextReveal
                   text={line.text}
-                  delay={0.35 + index * 0.12}
+                  start={isReady}
+                  delay={HANDOFF + 0.35 + index * 0.12}
                   className={cn(line.accent && 'accent-serif')}
                   // The gradient goes on the word, not the wrapper. Each word
                   // is transformed for the reveal, and a transform on a
@@ -166,11 +194,18 @@ export function Hero() {
         {/* ── Visual ───────────────────────────────────────────────────── */}
         <motion.div
           initial={{ opacity: 0, scale: 0.94 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: DURATION.slower, ease: EASE.outExpo, delay: 0.3 }}
+          animate={isReady ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.94 }}
+          transition={{ duration: DURATION.slower, ease: EASE.outExpo, delay: HANDOFF + 0.3 }}
           className="lg:col-span-6 xl:col-span-5 xl:col-start-8"
         >
-          <HeroVisual />
+          {/* Drifts slower than the page as the hero scrolls away, so the
+              composition separates from the copy beside it. Kept at 0.12 —
+              barely perceptible frame to frame, but it is what stops the two
+              columns feeling glued to the same plane. The factory bails out
+              entirely under reduced motion. */}
+          <Parallax speed={0.12}>
+            <HeroVisual />
+          </Parallax>
         </motion.div>
       </div>
 
@@ -179,8 +214,8 @@ export function Hero() {
       <motion.a
         href="#about"
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: DURATION.slow, delay: 1.4 }}
+        animate={isReady ? { opacity: 1 } : { opacity: 0 }}
+        transition={{ duration: DURATION.slow, delay: HANDOFF + 1.4 }}
         aria-label="Scroll to next section"
         className={cn(
           'absolute bottom-8 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2',

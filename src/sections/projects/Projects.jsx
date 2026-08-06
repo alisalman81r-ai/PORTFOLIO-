@@ -97,9 +97,17 @@ export function Projects() {
         {/* ── Showcase ────────────────────────────────────────────────── */}
         {/* `popLayout` takes an exiting row out of flow immediately, so the rows
             below slide up while it fades rather than waiting for it to finish.
-            With `mode="wait"` the list would visibly stall on every filter. */}
+            With `mode="wait"` the list would visibly stall on every filter.
+
+            No `initial={false}` here, deliberately. It would read as harmless —
+            the rows carry no entrance of their own, so there is seemingly nothing
+            to suppress — but `AnimatePresence` publishes that flag on
+            `PresenceContext` and every descendant motion component honours it.
+            The scroll reveals *inside* each row would render at their finished
+            state and never animate. See the long note in
+            `layouts/PageTransition.jsx`. */}
         <ul className="mt-16 lg:mt-20">
-          <AnimatePresence mode="popLayout" initial={false}>
+          <AnimatePresence mode="popLayout">
             {visibleProjects.map((project, index) => (
               <ProjectShowcase
                 key={project.id}

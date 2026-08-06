@@ -2,6 +2,7 @@ import { memo } from 'react'
 
 import { Icon, ImageFrame, Tag } from '@/components/ui'
 import { StaggerItem } from '@/components/animations'
+import { maskReveal } from '@/animations'
 import { formatDate } from '@/utils'
 import { cn } from '@/utils'
 
@@ -28,8 +29,11 @@ import { cn } from '@/utils'
 export const BlogCard = memo(function BlogCard({ post }) {
   const isPublished = Boolean(post.url)
 
+  // A wipe rather than a rise — the card is led by its cover image, and a clip
+  // reveal is the editorial idiom for photography. See the vector guide in
+  // `animations/variants.js`.
   return (
-    <StaggerItem as="li" className="h-full">
+    <StaggerItem as="li" variants={maskReveal} className="h-full">
       <article
         className={cn(
           'card card-glass card-flush group relative flex h-full flex-col overflow-hidden rounded-card',

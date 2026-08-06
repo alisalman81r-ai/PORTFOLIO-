@@ -42,6 +42,11 @@ import { cn } from '@/utils'
  * @param {number} [props.stagger=STAGGER.tight] Seconds between words.
  * @param {boolean} [props.animate=true] Set false to defer to a parent's
  *   variant propagation instead of animating on mount.
+ * @param {boolean} [props.start=true] Mount-trigger mode only: hold every word
+ *   at its hidden position until this flips true. The hero uses it to wait for
+ *   the page loader — an entrance that plays under an opaque cover is an
+ *   entrance nobody sees. Ignored when `inView` is set, where the scroll
+ *   position is already the trigger.
  * @param {boolean} [props.inView=false] Trigger on scroll into view instead of
  *   on mount. Required for any heading below the fold — mount-triggered text
  *   finishes revealing long before the user reaches it, so they only ever see
@@ -62,6 +67,7 @@ export function TextReveal({
   delay = 0,
   stagger = STAGGER.tight,
   animate = true,
+  start = true,
   inView = false,
   className,
   wordClassName,
@@ -93,7 +99,7 @@ export function TextReveal({
       {...(animate &&
         (inView
           ? { initial: 'hidden', whileInView: 'visible', viewport: { ...VIEWPORT, once: true } }
-          : { initial: 'hidden', animate: 'visible' }))}
+          : { initial: 'hidden', animate: start ? 'visible' : 'hidden' }))}
       {...rest}
     >
       {/* The sentence, intact, for assistive tech. Everything below is hidden

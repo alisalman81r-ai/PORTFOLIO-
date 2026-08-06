@@ -1,5 +1,6 @@
 import { Section } from '@/layouts'
 import { Stagger, StaggerItem } from '@/components/animations'
+import { scaleIn } from '@/animations'
 import { Counter, GlowOrb, Icon, SectionHeader } from '@/components/ui'
 import { ACHIEVEMENTS, ACHIEVEMENTS_META } from '@/data'
 import { cn } from '@/utils'
@@ -51,7 +52,7 @@ export function Achievements() {
           className="mt-14 grid items-stretch gap-4 sm:grid-cols-2 lg:mt-16 lg:grid-cols-4"
         >
           {ACHIEVEMENTS.map((achievement) => (
-            <StaggerItem as="li" key={achievement.id} className="h-full">
+            <StaggerItem as="li" key={achievement.id} variants={scaleIn} className="h-full">
               <div
                 className={cn(
                   // `flex-col` so the derived marker can be pinned to the
