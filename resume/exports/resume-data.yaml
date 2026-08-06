@@ -1,0 +1,442 @@
+
+_readme:
+  - "CANONICAL RESUME CONTENT. Every generated file is built from this one."
+  - ""
+  - "Edit this file, then run `npm run resume`. Do not edit the generated .md,"
+  - ".html or .pdf files directly — the next build overwrites them."
+  - ""
+  - "PLACEHOLDER CONVENTION: anything wrapped in [square brackets] is a slot you"
+  - "must fill. The build fails loudly if a placeholder survives into an export"
+  - "marked `final: true` in build.mjs, so an unfilled resume cannot be sent by"
+  - "accident. Run `npm run resume -- --check` to list what is still outstanding."
+  - ""
+  - "NOTHING HERE IS INVENTED. Content was extracted from src/data/*.js in this"
+  - "repository. Where the portfolio had no answer — education, certificates,"
+  - "languages, real contact details — the field is an empty slot rather than a"
+  - "plausible guess."
+meta:
+  version: "1.0.0"
+  sourceOfTruth: "src/data/*.js"
+  defaultVariant: "frontend"
+  lastReviewed: "[YYYY-MM-DD — set when you last checked every fact below]"
+header:
+  name: "[Your Full Name]"
+  title: "Frontend Developer"
+  tagline: "I design it, then I build it."
+  location: "[City, Country]"
+  openTo: "Remote · Hybrid · Contract"
+  availability: "Available for new projects"
+contact:
+  email: "[you@yourdomain.com]"
+  phone: "[+00 000 0000000]"
+  website: "[yourdomain.com]"
+  github: "github.com/alisalman81r-ai"
+  githubUrl: "https://github.com/alisalman81r-ai"
+  linkedin: "[linkedin.com/in/your-handle]"
+  dribbble: "[dribbble.com/your-handle — delete if unused]"
+_contactNote: "github is the one verified entry — it is the real remote configured on this repository. Everything else is a slot. Set any field to an empty string to drop that line from every output: phone and dribbble are the usual candidates."
+summaryVariants:
+  _note: "Pick with `npm run resume -- --variant=react`. Each is one paragraph, three sentences at most: what you are, what you work in, what you bring that the next candidate does not. No adjectives about yourself — let the projects carry that."
+  frontend: "Frontend developer who came to code through design. I build interfaces in React, Next.js and Tailwind CSS with accessibility and performance treated as part of the build rather than a later pass, and I work in design systems and components rather than one-off screens. Four years of design practice behind the code means I catch the spacing, type and motion problems before they reach review."
+  react: "React developer building component-driven interfaces with predictable state, hooks and a design-system foundation. I work across React, Next.js and Tailwind CSS, with enough Node.js, Express and database experience to design a sensible contract with the server instead of working around whatever it returns. I started in graphic design, so interface quality and implementation quality are the same job to me."
+  nextjs: "Next.js developer focused on fast, accessible production sites — routing, server rendering, image and font delivery, and Core Web Vitals treated as a budget rather than a hope. I build component-first in React and Tailwind CSS and deploy on Vercel. A background in graphic design means the implementation matches the intent of the design file, including the states the file never shows."
+  fullstack: "Full stack developer working from interface to data. React, Next.js and Tailwind CSS on the front, Node.js, Express, MongoDB and Firebase behind them, with Git, GitHub and Vercel around the workflow. Owning both sides means the data model suits the interface rather than the interface working around the data."
+  freelance: "Designer and developer who takes web projects end to end — scoping the work, designing the structure, writing the code, and handing over something the client can maintain without calling me back. React, Next.js, Tailwind CSS and Node.js, with four years of graphic and interface design underneath. Clients get one person accountable for how it looks and how it works."
+titleVariants:
+  frontend: "Frontend Developer"
+  react: "React Developer"
+  nextjs: "Next.js Developer"
+  fullstack: "Full Stack Developer"
+  freelance: "Freelance Web Developer & Designer"
+skills:
+  _noteSpelling: "US spelling throughout — 'Color Theory', 'Performance Optimization'. ATS keyword matching is literal, and the great majority of remote and international tech postings are written in US English, so a British-spelled term scores zero against them. The portfolio prose stays British; this file does not. Reverse it here if you are targeting UK and EU employers only."
+  _note: "Grouped exactly as src/data/skills.js groups them, with Tools split into Version Control and Deployment because recruiters and ATS parsers scan for those terms specifically. `Currently learning` is listed separately and honestly — claiming TypeScript as a strength when it is in progress is the fastest way to lose a technical screen."
+  Frontend:
+    - "HTML5"
+    - "CSS3"
+    - "JavaScript (ES6+)"
+    - "React"
+    - "Next.js"
+    - "Tailwind CSS"
+    - "Responsive Design"
+    - "Web Accessibility (WCAG 2.1 AA)"
+  Backend:
+    - "Node.js"
+    - "Express.js"
+    - "REST APIs"
+  Database:
+    - "MongoDB"
+    - "Firebase"
+  UI/UX Design:
+    - "Design Systems"
+    - "Component Libraries"
+    - "Motion Design"
+    - "Responsive Layout"
+    - "Wireframing"
+    - "Prototyping"
+  Graphic Design:
+    - "Adobe Photoshop"
+    - "Adobe Illustrator"
+    - "Figma"
+    - "Canva"
+    - "Typography"
+    - "Color Theory"
+    - "Composition & Layout"
+  Version Control:
+    - "Git"
+    - "GitHub"
+    - "Pull Request Review"
+    - "GitHub Actions (CI)"
+  Deployment:
+    - "Vercel"
+    - "Preview Deployments"
+    - "Performance Optimization"
+    - "Core Web Vitals"
+  Tools:
+    - "VS Code"
+    - "Chrome DevTools"
+    - "Figma Dev Mode"
+    - "npm"
+  Currently learning:
+    - "TypeScript"
+    - "PostgreSQL"
+    - "Prisma"
+    - "Docker"
+skillsDisplay:
+  _note:
+    - "The two resumes need different skill lists, and this is where that is declared rather than hard-coded in a template."
+    - ""
+    - "The ATS resume prints every group above in full, because parser matching is literal: a posting asking for 'GitHub Actions' scores nothing against a resume that only says 'CI'. Exhaustiveness is the point there."
+    - ""
+    - "The premium resume is read by a person in about forty seconds. Nine categories and sixty terms is not a skill list to them, it is a wall — and 'npm' next to 'React' quietly devalues both. So it shows five merged groups, capped. Nothing is hidden that matters; the full matrix is one click away in the portfolio."
+    - ""
+    - "`from` names groups in `skills` above. `limit` caps items and is applied after merging."
+  premium:
+    -
+      label: "Frontend"
+      from:
+        - "Frontend"
+      limit: 7
+    -
+      label: "Backend & Data"
+      from:
+        - "Backend"
+        - "Database"
+    -
+      label: "Design"
+      from:
+        - "UI/UX Design"
+        - "Graphic Design"
+      limit: 8
+    -
+      label: "Workflow"
+      from:
+        - "Version Control"
+        - "Deployment"
+        - "Tools"
+      limit: 6
+    -
+      label: "Learning"
+      from:
+        - "Currently learning"
+atsDisplay:
+  _note:
+    - "One page is a hard constraint, and the full content is 2.4 pages. These are the cuts that close the gap — declared here so they are decisions you can revisit, not something buried in a template."
+    - ""
+    - "What survives is chosen by what a recruiter uses in the first pass: job titles, dates, technologies, and outcomes. What goes is what duplicates something else on the page — the role summaries repeat their own bullets, and the achievements repeat the summary."
+    - ""
+    - "Raise any limit and the resume spills onto a second page. That is a legitimate choice once you have more experience to show; it is not one worth making while a single page still holds everything that matters."
+    - ""
+    - "`skillGroups` merges categories into fewer LINES without dropping a single keyword — nine labelled lines become six, and every term a parser might match is still present."
+  projectLimit: 3
+  bulletLimit: 3
+  achievementLimit: 1
+  softSkillLimit: 3
+  includeRoleSummaries: false
+  skillGroups:
+    -
+      label: "Frontend"
+      from:
+        - "Frontend"
+    -
+      label: "Backend & Databases"
+      from:
+        - "Backend"
+        - "Database"
+    -
+      label: "Design"
+      from:
+        - "UI/UX Design"
+        - "Graphic Design"
+    -
+      label: "Tools & Workflow"
+      from:
+        - "Version Control"
+        - "Deployment"
+        - "Tools"
+    -
+      label: "Currently learning"
+      from:
+        - "Currently learning"
+softSkills:
+  _note: "Derived from how the portfolio describes the work — freelance ownership, client scoping, documented handover — not from a list of adjectives. Every one of these is something the Experience section below can back up."
+  items:
+    - "End-to-end project ownership"
+    - "Client communication and scoping"
+    - "Translating business goals into deliverable scope"
+    - "Documentation and handover"
+    - "Design-to-development handoff"
+    - "Self-directed learning"
+experience:
+  _reviewWarning: "DATES ARE INFERRED, NOT RECORDED. src/data/experience.js flags them the same way. Check every period against what actually happened before you send this anywhere."
+  entries:
+    -
+      role: "Freelance Web Developer"
+      organisation: "Independent"
+      type: "Freelance"
+      location: "Remote"
+      period: "2025 — Present"
+      current: true
+      summary: "Build and ship websites and web applications for clients directly — scoping the work, designing the structure, writing the code, and handing over something the client can maintain."
+      bullets:
+        - "Own projects end to end, from first conversation through design, build and deployment"
+        - "Translate business goals into scope a fixed budget can actually cover"
+        - "Hand over documentation, not just a repository, so clients handle routine changes"
+        - "Build component-first in React, Next.js and Tailwind CSS, deployed on Vercel"
+      technologies:
+        - "React"
+        - "Next.js"
+        - "Tailwind CSS"
+        - "Node.js"
+        - "Vercel"
+    -
+      role: "Storyboard & Creative Direction"
+      organisation: "Klyra"
+      type: "Client"
+      location: "[Remote / On-site — set this]"
+      period: "2025"
+      current: false
+      summary: "Narrative and visual direction for a client project — mapping sequence, pacing and motion intent before implementation started, so the build began from a decision rather than a blank page."
+      bullets:
+        - "Defined the beat-by-beat sequence and the purpose of each beat"
+        - "Specified motion intent in a form an implementer could build from directly"
+        - "Settled scope while changes were still cheap, before production work began"
+      technologies:
+        - "Figma"
+        - "Motion Design"
+        - "Design Systems"
+    -
+      role: "Self-Directed Projects"
+      organisation: "Personal"
+      type: "Self-directed"
+      location: "Remote"
+      period: "2022 — Present"
+      current: true
+      summary: "Started as design exercises in 2022 and became build exercises once the code caught up. Where approaches too risky for a client deadline get tried first."
+      bullets:
+        - "Full ownership of architecture decisions and their consequences"
+        - "Evaluate new tools here before they reach client work"
+        - "Several became the case studies listed below"
+      technologies:
+        - "React"
+        - "JavaScript"
+        - "GSAP"
+        - "MongoDB"
+projects:
+  _note: "Ordered as requested. Each carries the full case-study shape — overview, problem, solution, role, technologies, features, challenges, outcome. The one-page ATS resume prints a compressed form (name, stack, two outcome lines); the premium resume and the case-study dossier print the full record."
+  items:
+    -
+      id: "ev-charger-finder"
+      name: "EV Charger Finder"
+      category: "[Web App / Mobile Web — set this]"
+      year: "[YYYY]"
+      status: "[Live / In development / Concept]"
+      role: "[Your role — e.g. Design & Frontend Development]"
+      duration: "[e.g. 4 weeks]"
+      featured: false
+      _warning: "ENTIRELY UNFILLED, AND DELIBERATELY SO. This project does not exist anywhere in the portfolio codebase — it was removed at your request earlier and there is no description, stack, screenshot or repository for it here. Every field below is a slot. Writing a plausible-sounding EV charging app case study would be inventing your work, which is the one thing this system will not do. Fill it in or delete the whole record."
+      overview: "[One or two sentences: what it is, who it is for, and what it does that matters.]"
+      problem: "[What was wrong, missing, or hard before this existed.]"
+      solution: "[What you built, and why you built it that way.]"
+      technologies:
+        - "[Tech]"
+        - "[Tech]"
+        - "[Tech]"
+      features:
+        - "[A capability, and why it matters to the user]"
+        - "[Another — three or four is enough]"
+      challenges:
+        -
+          challenge: "[A real problem you hit]"
+          solution: "[How you resolved it — this pairing is the most convincing thing on a resume]"
+      outcome:
+        - "[A qualitative result. Use a number only if you actually measured one.]"
+      links:
+        live: ""
+        code: ""
+    -
+      id: "construction-website"
+      name: "Construction Website"
+      category: "Marketing Site"
+      year: "2025"
+      status: "Live"
+      role: "Design & Frontend Development"
+      duration: "6 weeks"
+      featured: true
+      overview: "A client-facing marketing site for a construction firm, with a content structure the team can maintain without a developer."
+      problem: "The existing site was a brochure that could not be updated, so the project portfolio was years out of date — the single thing a prospective client most wants to see."
+      solution: "A component-driven build with a clear content model, so new projects and services slot into existing layouts. Type and spacing scale with the viewport, keeping the site solid on the phones most of its traffic arrives on."
+      technologies:
+        - "React"
+        - "Next.js"
+        - "Tailwind CSS"
+        - "Vercel"
+      features:
+        - "Project gallery presenting completed work as case studies rather than a photo dump"
+        - "Editable content model — new entries follow a defined shape, so layouts never break"
+        - "Short, forgiving enquiry form with validation that guides rather than scolds"
+        - "Mobile-first build, designed at phone width where most traffic arrives"
+      challenges:
+        -
+          challenge: "Large photography is central to the pitch but is the heaviest thing on the page."
+          solution: "Responsive sources with reserved aspect ratios, so images never cause layout shift as they load."
+        -
+          challenge: "The client needed to add projects without breaking the layout."
+          solution: "Constrained the content model and documented it, so every entry renders predictably."
+      outcome:
+        - "Client updates the portfolio without developer involvement"
+        - "Imagery loads without layout shift on slow connections"
+        - "One layout system carries every page type"
+      links:
+        live: "[URL if public]"
+        code: "[URL if public]"
+    -
+      id: "klyra-storyboard"
+      name: "Storyboard Design — Klyra"
+      category: "Design & Direction"
+      year: "2025"
+      status: "Delivered"
+      role: "Creative Direction & Storyboarding"
+      duration: "[e.g. 3 weeks]"
+      featured: true
+      overview: "Narrative and visual direction for a client project: the sequence, pacing and motion intent worked out and specified before implementation began."
+      problem: "Production was about to start from a blank page, with the story, pacing and motion undecided — the most expensive point at which to still be making those choices."
+      solution: "Mapped the piece beat by beat with the purpose of each beat stated, then specified visual language and motion intent in a form an implementer could build from directly."
+      technologies:
+        - "Figma"
+        - "Motion Design"
+        - "Design Systems"
+      features:
+        - "Narrative sequence with every beat mapped to its purpose"
+        - "Motion direction specified as intent, not decoration"
+        - "Visual language — type, colour and spacing — decided once and applied throughout"
+        - "Build-ready specification handed over for implementation"
+      challenges:
+        -
+          challenge: "Motion intent is easy to describe vaguely and hard to hand over."
+          solution: "Specified timing, easing and purpose per transition, so the implementer inherited decisions rather than adjectives."
+      outcome:
+        - "Implementation began from a settled sequence rather than a blank page"
+        - "Scope was agreed while changes were still cheap"
+      links:
+        live: ""
+        code: ""
+    -
+      id: "dashboard"
+      name: "Analytics Dashboard"
+      category: "Data Interface"
+      year: "2024"
+      status: "In development"
+      role: "Frontend Development & UI Design"
+      duration: "[e.g. 5 weeks]"
+      featured: true
+      overview: "A data interface built around what a user actually opens a dashboard to find out, rather than around what the data happens to contain."
+      problem: "Dense metrics and tables become unreadable when everything is given equal weight — the numbers are present but the answer is not."
+      solution: "Ranked every metric against the questions users open the dashboard to answer, then applied one consistent chart and table language across every view so patterns read the same way everywhere."
+      technologies:
+        - "React"
+        - "JavaScript"
+        - "Tailwind CSS"
+        - "Node.js"
+      features:
+        - "Prioritized layout — headline metrics first, detail available without demanding attention"
+        - "Consistent chart language: one set of rules for colour, axes and labelling"
+        - "Dense tables kept readable with tabular figures and minimal rules"
+        - "Wide tables degrade to a stacked layout instead of scrolling sideways"
+      challenges:
+        -
+          challenge: "Interaction cost climbs quickly as views and filters multiply."
+          solution: "Profiled interaction cost and removed avoidable re-renders rather than adding memoization everywhere."
+      outcome:
+        - "Headline answers readable without interrogating the interface"
+        - "One chart and table language across all views"
+      links:
+        live: ""
+        code: ""
+    -
+      id: "exmo"
+      name: "EXMO"
+      category: "Web App"
+      year: "2024"
+      status: "In development"
+      role: "[Your role]"
+      duration: "[e.g. 4 weeks]"
+      featured: false
+      _warning: "UNFILLED IN THE PORTFOLIO TOO. src/data/projects.js carries this record with every field marked PLACEHOLDER, because the project was named without context. Fill it in both places, or drop it from the resume — a project a recruiter asks about and you cannot describe is worse than one fewer project."
+      overview: "[One or two sentences: what EXMO is, who it is for, and what it does that matters.]"
+      problem: "[What was wrong or missing before it existed.]"
+      solution: "[What you built, and why you built it that way.]"
+      technologies:
+        - "React"
+        - "JavaScript"
+      features:
+        - "[A capability, and why it matters]"
+        - "[Another]"
+      challenges:
+        -
+          challenge: "[A real problem you hit]"
+          solution: "[How you resolved it]"
+      outcome:
+        - "[A qualitative result]"
+      links:
+        live: ""
+        code: ""
+education:
+  _note: "Empty on purpose. src/data/experience.js keeps EDUCATION as an empty array with the comment 'a qualification is a verifiable claim'. Add your real entry below and delete the placeholder; if you have no formal qualification in this field, delete the section entirely — an absent Education section reads far better than an apologetic one."
+  entries:
+    -
+      qualification: "[Degree / Diploma / Programme]"
+      institution: "[Institution]"
+      location: "[City, Country]"
+      period: "[YYYY — YYYY]"
+      note: "[Optional: focus, honours, or relevant coursework]"
+certificates:
+  _note: "Empty on purpose. Nothing in the portfolio records a certification and none will be invented here. Add real ones — issuer, credential ID and verification URL — or delete the section. An unverifiable certificate is a liability in a technical interview."
+  entries:
+    -
+      name: "[Certificate name]"
+      issuer: "[Issuing organization]"
+      date: "[Month YYYY]"
+      credentialId: "[ID, if any]"
+      url: "[Verification URL, if any]"
+languages:
+  _note: "Not recorded anywhere in the portfolio, so not guessed here. Use the CEFR-style bands recruiters recognise: Native / Fluent / Professional working / Conversational / Basic."
+  entries:
+    -
+      language: "[Language]"
+      level: "[Native / Fluent / Professional working]"
+    -
+      language: "[Language]"
+      level: "[Level]"
+highlights:
+  _note: "Facts the portfolio can substantiate, plus slots for wins only you know about. Deliberately not vanity metrics — 'four years, four documented case studies' is checkable; '50+ projects delivered' is not, and a recruiter who doubts one number doubts the rest of the page."
+  items:
+    - "Four years across design and code: graphic design 2022, frontend 2024, full stack 2025"
+    - "Built a production portfolio: design token system, WCAG 2.1 AA, code-split routes"
+    - "Documented case studies covering marketing sites, data interfaces and creative direction"
+    - "[A measured result from real work — a load time, a conversion change, a delivery time. Delete if you have none rather than estimating one.]"
+interests:
+  _note: "Optional. Only survives onto the page if `showInterests` is true in build.mjs — most one-page resumes are better without it."
+  items:
+    - "[Interest]"
+    - "[Interest]"
