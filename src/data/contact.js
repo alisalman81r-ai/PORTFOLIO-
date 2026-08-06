@@ -1,3 +1,5 @@
+import { CONTACT_SCHEMA, HONEYPOT_FIELD } from '@shared/contactSchema.js'
+
 import { PERSONAL } from './personal.js'
 
 /**
@@ -73,7 +75,7 @@ export const CONTACT_METHODS = [
  * @typedef {object} FormFieldConfig
  * @property {string} id            Also the input `name`.
  * @property {string} label
- * @property {'text'|'email'|'textarea'} type
+ * @property {'text'|'email'|'textarea'|'select'} type
  * @property {string} placeholder
  * @property {string} [autoComplete]
  * @property {boolean} required
@@ -86,50 +88,57 @@ export const CONTACT_METHODS = [
  * @property {string} [hint]        Shown under the label, before any error.
  */
 
-/** @type {FormFieldConfig[]} */
-export const FORM_FIELDS = [
-  {
-    id: 'name',
-    label: 'Name',
-    type: 'text',
-    placeholder: 'Your name',
-    autoComplete: 'name',
-    required: true,
-    minLength: 2,
-    maxLength: 80,
-  },
-  {
-    id: 'email',
-    label: 'Email',
-    type: 'email',
-    placeholder: 'you@company.com',
-    autoComplete: 'email',
-    required: true,
-    maxLength: 160,
-  },
-  {
-    id: 'subject',
-    label: 'Subject',
-    type: 'text',
-    placeholder: 'What is this about?',
-    autoComplete: 'off',
-    required: true,
-    fullWidth: true,
-    minLength: 3,
-    maxLength: 120,
-  },
-  {
-    id: 'message',
-    label: 'Message',
-    type: 'textarea',
+/**
+ * Presentation, keyed by field id.
+ *
+ * THE CONSTRAINTS ARE NOT HERE, AND MUST NOT BE.
+ * Labels, types, required flags and length limits live in
+ * `shared/contactSchema.js`, which the serverless function in `/api` imports as
+ * well. That file is the contract; this one is how the contract is dressed.
+ *
+ * The split matters because the browser and the server both validate this form
+ * and have to agree. Two copies of "message must be at least 20 characters" is
+ * how a form ends up accepting input on one side and rejecting it on the other.
+ * Everything below is safe to change freely — none of it is a rule.
+ */
+const FIELD_PRESENTATION = {
+  name: { placeholder: 'Your name', autoComplete: 'name' },
+  email: { placeholder: 'you@company.com', autoComplete: 'email' },
+  company: { placeholder: 'Optional', autoComplete: 'organization' },
+  // NO HINTS ON HALF-WIDTH FIELDS.
+  //
+  // A hint adds a line to its cell, and in a two-column grid that pushes its
+  // own control down while the one beside it stays put. Both fixes are worse
+  // than the problem: leave it, and the inputs are visibly misaligned; bottom-
+  // align the row, and the field *without* a hint gets a gap under its label.
+  //
+  // So guidance on these two lives in their option lists instead — "Prefer not
+  // to say" says everything "this is optional" would. The message field keeps
+  // its hint because it spans the grid and has nothing to misalign with.
+  service: { autoComplete: 'off' },
+  budget: { autoComplete: 'off' },
+  timeline: { autoComplete: 'off' },
+  subject: { placeholder: 'What is this about?', autoComplete: 'off', fullWidth: true },
+  message: {
     placeholder: 'What are you building, and what does done look like?',
-    required: true,
-    minLength: 20,
-    maxLength: 2000,
     rows: 6,
     hint: 'The more context, the more useful my reply.',
   },
-]
+}
+
+/**
+ * The rendered form: shared constraints merged with local presentation.
+ *
+ * Adding a field is one entry in `shared/contactSchema.js` and one here. It
+ * then validates on both sides, renders, stores and appears in both emails with
+ * no other change.
+ *
+ * @type {FormFieldConfig[]}
+ */
+export const FORM_FIELDS = CONTACT_SCHEMA.map((field) => ({
+  ...field,
+  ...FIELD_PRESENTATION[field.id],
+}))
 
 /**
  * Name of the honeypot field.
@@ -140,7 +149,7 @@ export const FORM_FIELDS = [
  * again. Costs nothing and catches the majority of drive-by spam without a
  * CAPTCHA, which is a real accessibility burden.
  */
-export const HONEYPOT_FIELD = 'company_website'
+export { HONEYPOT_FIELD }
 
 /**
  * Labels for the contact details panel.
@@ -156,9 +165,17 @@ export const CONTACT_PANEL = {
   resumeCta: 'Download résumé',
 }
 
-/** Copy for each submission state. Kept out of the component. */
+/**
+ * Copy for each submission state.
+ *
+ * These are fallbacks. The endpoint returns its own message for every outcome
+ * it knows about — validation, rate limiting, delivery failure — and the form
+ * shows that instead, because the server knows which of them happened and the
+ * client does not. `error` is what appears when the request never arrived at
+ * all: an offline browser, a DNS failure, a blocked request.
+ */
 export const FORM_MESSAGES = {
   success: 'Thanks — your message is on its way. I will reply within two working days.',
-  error: 'Something went wrong sending that. Email me directly and I will pick it up.',
+  error: 'Could not reach the server. Check your connection, or email me directly and I will pick it up.',
   submitting: 'Sending…',
 }

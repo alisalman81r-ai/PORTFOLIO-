@@ -1,53 +1,18 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
+
+import { validateField } from '@shared/contactSchema.js'
 
 /**
- * Email pattern.
+ * VALIDATION LIVES IN `shared/contactSchema.js`, NOT HERE.
  *
- * Deliberately permissive. The only definitive test of an address is sending to
- * it, and every "strict" regex on the internet rejects valid addresses —
- * apostrophes, plus-addressing, new TLDs. This catches the genuine typos
- * (missing @, missing dot, trailing space) and lets everything else through,
- * which is the right trade for a contact form: a false rejection loses a real
- * enquiry, a false accept costs one bounced email.
+ * It used to be in this file. It moved when the form gained a real endpoint,
+ * because the server has to apply exactly the same rules — and two copies of
+ * "a message must be at least 20 characters" is how a form ends up accepting
+ * input in the browser and rejecting it on submit, or the reverse.
+ *
+ * This hook is now about *when* validation runs and what happens to the result.
+ * What counts as valid is not its decision.
  */
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
-/**
- * Validate one value against its field config.
- *
- * Order matters: `required` is checked first so an empty field reports "this is
- * required" rather than "must be at least 20 characters", which is technically
- * true and completely unhelpful.
- *
- * @param {string} value
- * @param {import('@/data/contact').FormFieldConfig} field
- * @returns {string} Error message, or an empty string when valid.
- */
-function validateField(value, field) {
-  const trimmed = value.trim()
-
-  if (field.required && !trimmed) {
-    return `${field.label} is required.`
-  }
-
-  // Everything below only applies to a field with content. An optional field
-  // left blank is valid, and length rules must not fire on it.
-  if (!trimmed) return ''
-
-  if (field.type === 'email' && !EMAIL_PATTERN.test(trimmed)) {
-    return 'Enter a valid email address.'
-  }
-
-  if (field.minLength && trimmed.length < field.minLength) {
-    return `${field.label} must be at least ${field.minLength} characters.`
-  }
-
-  if (field.maxLength && trimmed.length > field.maxLength) {
-    return `${field.label} must be ${field.maxLength} characters or fewer.`
-  }
-
-  return ''
-}
 
 /**
  * Form state, validation, and submission.
@@ -79,10 +44,25 @@ export function useForm({ fields, onSubmit, honeypot }) {
     [fields],
   )
 
+  // Stamped once when the form mounts. Sent with the submission so the server
+  // can reject anything filled in faster than a human could read it — see
+  // MIN_SUBMIT_MS in the shared schema. A ref rather than state: it must never
+  // cause a render, and it must not change between submissions.
+  const renderedAt = useRef(Date.now())
+
+  // Guards against a second submission while the first is still in flight.
+  // `status` cannot do this on its own: setState is asynchronous, so two rapid
+  // submits can both read 'idle' before either write lands, and the visitor
+  // sends two identical enquiries.
+  const inFlight = useRef(false)
+
   const [values, setValues] = useState(initialValues)
   const [errors, setErrors] = useState({})
   const [touched, setTouched] = useState({})
   const [status, setStatus] = useState('idle')
+  // What the server said, when it said anything. Preferred over the generic
+  // copy because only the server knows which failure occurred.
+  const [serverMessage, setServerMessage] = useState('')
   const [honeypotValue, setHoneypotValue] = useState('')
 
   const handleChange = useCallback(
@@ -101,6 +81,7 @@ export function useForm({ fields, onSubmit, honeypot }) {
       // Any edit after a completed submission returns the form to a neutral
       // state, so a stale "sent" banner never sits above a half-typed message.
       setStatus((current) => (current === 'success' || current === 'error' ? 'idle' : current))
+      setServerMessage('')
     },
     [fields],
   )
@@ -119,6 +100,10 @@ export function useForm({ fields, onSubmit, honeypot }) {
   const handleSubmit = useCallback(
     async (event) => {
       event?.preventDefault()
+
+      // Synchronous, so a double-click or an Enter keypress landing on the same
+      // frame as a click cannot get past it.
+      if (inFlight.current) return
 
       // Silently accept and discard. Telling a bot it failed only teaches it
       // to try again with the field left blank.
@@ -142,15 +127,43 @@ export function useForm({ fields, onSubmit, honeypot }) {
         return
       }
 
+      inFlight.current = true
       setStatus('submitting')
 
       try {
-        await onSubmit?.(values)
+        await onSubmit?.({ ...values, renderedAt: renderedAt.current }, honeypotValue)
         setStatus('success')
         setValues(initialValues)
         setTouched({})
-      } catch {
+        setErrors({})
+      } catch (error) {
         setStatus('error')
+
+        // The endpoint returns per-field errors for anything the client's own
+        // validation let through — a value that passed here but not there, or a
+        // stale bundle validating against an older rule set. Attaching them to
+        // the fields is what makes a server rejection actionable instead of a
+        // banner saying something went wrong.
+        if (error?.fieldErrors) {
+          setErrors(error.fieldErrors)
+          setTouched(Object.fromEntries(Object.keys(error.fieldErrors).map((id) => [id, true])))
+
+          // Focus is deferred a frame, and it has to be. Every field is
+          // `disabled` while submitting, and the state updates above have only
+          // been *queued* at this point — React has not re-enabled anything yet.
+          // Calling `focus()` here silently does nothing, because focusing a
+          // disabled element is a no-op, and a keyboard or screen-reader user is
+          // told the submission failed with no indication of where. Measured:
+          // without the deferral, `document.activeElement` stayed on `<body>`.
+          const firstId = Object.keys(error.fieldErrors)[0]
+          if (firstId) {
+            requestAnimationFrame(() => document.getElementById(firstId)?.focus())
+          }
+        }
+
+        if (error?.message) setServerMessage(error.message)
+      } finally {
+        inFlight.current = false
       }
     },
     [fields, values, onSubmit, initialValues, honeypot, honeypotValue],
@@ -161,6 +174,7 @@ export function useForm({ fields, onSubmit, honeypot }) {
     setErrors({})
     setTouched({})
     setStatus('idle')
+    setServerMessage('')
   }, [initialValues])
 
   return {
@@ -168,6 +182,7 @@ export function useForm({ fields, onSubmit, honeypot }) {
     errors,
     touched,
     status,
+    serverMessage,
     isSubmitting: status === 'submitting',
     handleChange,
     handleBlur,

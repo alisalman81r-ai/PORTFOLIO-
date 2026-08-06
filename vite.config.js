@@ -100,6 +100,10 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
+      // The contact form's validation rules are shared with the serverless
+      // function in /api, which cannot resolve '@'. They live in /shared and
+      // are imported by both — see shared/contactSchema.js.
+      '@shared': fileURLToPath(new URL('./shared', import.meta.url)),
     },
   },
 

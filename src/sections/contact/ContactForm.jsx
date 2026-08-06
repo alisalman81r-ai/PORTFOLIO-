@@ -3,30 +3,27 @@ import { AnimatePresence, motion } from 'motion/react'
 import { FormField, Icon } from '@/components/ui'
 import { DURATION, EASE } from '@/animations'
 import { FORM_FIELDS, FORM_MESSAGES, HONEYPOT_FIELD } from '@/data'
+import { submitEnquiry } from '@/lib/submitEnquiry'
 import { useForm } from '@/hooks'
 import { cn } from '@/utils'
 
 /**
  * Contact form.
  *
- * NO BACKEND YET — AND THE SEAM IS EXPLICIT
- * The submit handler below is the only place that needs to change. Swap the
- * simulated delay for a real request and everything around it — validation,
- * error focus, status messaging, the honeypot, the disabled state — already
- * works:
+ * Rendering only. Form state, validation timing, error focus and the
+ * submission guard live in `useForm`; the network call lives in
+ * `lib/submitEnquiry`; the rules live in `shared/contactSchema.js`, which the
+ * serverless function imports as well so both sides cannot disagree.
  *
- *   const handleSubmit = async (values) => {
- *     const response = await fetch('https://formspree.io/f/YOUR_ID', {
- *       method: 'POST',
- *       headers: { 'Content-Type': 'application/json' },
- *       body: JSON.stringify(values),
- *     })
- *     if (!response.ok) throw new Error('Request failed')
- *   }
+ * WHERE THE SUBMISSION GOES
+ * `POST /api/contact` — a Vercel serverless function in `/api`, running
+ * alongside this static build. It validates again, rate limits, stores the
+ * enquiry if a database is configured, emails it to the site owner, and sends
+ * the visitor a confirmation.
  *
- * Throwing is the contract: `useForm` turns a rejection into the error status.
- * A no-backend form that silently pretends to succeed is worse than no form at
- * all, so the simulation is documented here rather than hidden.
+ * Nothing about that is visible here, which is the point: this file changed by
+ * two lines when the form stopped being a simulation and started sending real
+ * email.
  *
  * `noValidate` turns off the browser's own bubbles so ours are the only
  * messages shown — they are styled, positioned next to the field, and announced
@@ -37,16 +34,16 @@ export function ContactForm({ className }) {
   const form = useForm({
     fields: FORM_FIELDS,
     honeypot: HONEYPOT_FIELD,
-    onSubmit: async () => {
-      // ── REPLACE THIS ────────────────────────────────────────────────────
-      // Simulated latency so the submitting state is real and testable.
-      // Throw to exercise the error path.
-      await new Promise((resolve) => setTimeout(resolve, 900))
-      // ────────────────────────────────────────────────────────────────────
-    },
+    onSubmit: submitEnquiry,
   })
 
-  const { values, errors, touched, status, isSubmitting } = form
+  const { values, errors, touched, status, isSubmitting, serverMessage } = form
+
+  // The endpoint's own wording when it sent any, the generic fallback when the
+  // request never arrived. Only the server knows whether this was a validation
+  // failure, a rate limit or a delivery problem, so its message wins.
+  const statusMessage =
+    (status === 'error' && serverMessage) || (status === 'success' && serverMessage) || FORM_MESSAGES[status]
 
   return (
     <form
@@ -138,7 +135,7 @@ export function ContactForm({ className }) {
                   name={status === 'success' ? 'success' : 'error'}
                   className="mt-0.5 size-4 shrink-0"
                 />
-                {FORM_MESSAGES[status]}
+                {statusMessage}
               </motion.p>
             )}
           </AnimatePresence>
