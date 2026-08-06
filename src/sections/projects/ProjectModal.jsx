@@ -1,5 +1,10 @@
+import { Link } from 'react-router-dom'
+
 import { Icon, ImageFrame, Modal, Tag } from '@/components/ui'
 import { TechIcon } from '@/components/ui/TechIcon'
+// The leaf module, not the barrel: importing the barrel here would pull the
+// entire case-study bundle into the projects chunk. See case-studies/slugs.js.
+import { hasCaseStudy } from '@/case-studies/slugs'
 import { PROJECT_STATUS } from '@/data'
 import { cn } from '@/utils'
 
@@ -206,20 +211,35 @@ export function ProjectModal({ project, onClose }) {
           </div>
 
           {/* ── Footer actions ─────────────────────────────────────────── */}
+          {/* The case study leads, because it is the only action here that keeps
+              the visitor on the site — and for a project with no public URL and
+              no public repository it is the only one that does anything at all.
+              Rendered only when a case study actually exists for this slug. */}
           <footer className="mt-10 flex flex-wrap items-center gap-3 border-t border-line pt-8">
+            {hasCaseStudy(project.slug) && (
+              <Link to={'/work/' + project.slug} className="btn btn-primary btn-sm group">
+                <Icon name="article" className="size-4" />
+                Read the case study
+                <Icon
+                  name="arrow"
+                  className="size-4 transition-transform duration-base ease-out-expo group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                />
+              </Link>
+            )}
+
             {project.liveUrl ? (
               <a
                 href={project.liveUrl}
                 target="_blank"
                 rel="noreferrer noopener"
-                className="btn btn-primary btn-sm"
+                className="btn btn-outline btn-sm"
               >
                 <Icon name="external" className="size-4" />
                 Visit live site
                 <span className="sr-only">(opens in a new tab)</span>
               </a>
             ) : (
-              <button type="button" disabled className="btn btn-primary btn-sm">
+              <button type="button" disabled className="btn btn-outline btn-sm">
                 <Icon name="external" className="size-4" />
                 Live link coming soon
               </button>

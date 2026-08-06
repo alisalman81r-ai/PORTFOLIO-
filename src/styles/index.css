@@ -31,6 +31,10 @@
 @import './base.css';
 @import './components.css';
 @import './utilities.css';
+/* Last, and inside `@media print` throughout — it overrides inline styles the
+   animation library writes at runtime, which nothing earlier in the cascade
+   can reach. See the note at the top of the file. */
+@import './print.css';
 
 /**
  * Tell Tailwind where to scan for class names. It infers this from the project

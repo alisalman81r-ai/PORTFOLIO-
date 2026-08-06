@@ -1,0 +1,167 @@
+/**
+ * Print styles.
+ *
+ * THE PROBLEM THIS EXISTS TO SOLVE
+ * Every scroll reveal on this site starts at `opacity: 0` and animates in when
+ * it enters the viewport. Printing does not scroll, so any section the reader
+ * has not already passed is still at zero — and prints as a blank page. A case
+ * study exported to PDF without this file is a title, a hero image, and nine
+ * empty sheets.
+ *
+ * Forcing visibility is therefore not a nicety here; it is the difference
+ * between a working export and a broken one. The `!important` flags are load
+ * bearing: they are overriding inline styles written by the animation library
+ * at runtime, which is the one case where nothing else wins.
+ *
+ * THE SECOND PROBLEM IS INK
+ * The site is dark by default. A dark page either arrives as black-on-white
+ * anyway — because most browsers drop background graphics when printing — or
+ * arrives correctly and empties a cartridge. So print inverts to paper: white
+ * ground, dark text, and the accent kept only where it carries meaning.
+ *
+ * Scoped to `@media print`, so nothing here affects the screen.
+ */
+
+@media print {
+  /* ── 1. EVERYTHING IS VISIBLE ─────────────────────────────────────────────
+     Overrides Motion's inline `opacity` and `transform`, GSAP's per-frame
+     writes, and any CSS transition still mid-flight when the print was
+     triggered. Without this the export is mostly blank. */
+  *,
+  *::before,
+  *::after {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    animation: none !important;
+    transition: none !important;
+    visibility: visible !important;
+  }
+
+  /* ── 2. PAPER, NOT SCREEN ────────────────────────────────────────────────
+     Forced onto the light token set regardless of the active theme, so an
+     export made at midnight in dark mode looks like one made at noon. */
+  :root {
+    --canvas: #fff;
+    --surface: #fff;
+    --elevated: #fff;
+    --sunken: #fff;
+    --ink: oklch(0.16 0.006 285);
+    --muted: oklch(0.42 0.011 285);
+    --faint: oklch(0.52 0.011 285);
+    --accent: oklch(0.52 0.15 78);
+    --line: oklch(0 0 0 / 0.14);
+    --line-strong: oklch(0 0 0 / 0.22);
+  }
+
+  html,
+  body {
+    background: #fff !important;
+    color: var(--ink) !important;
+  }
+
+  @page {
+    size: A4;
+    margin: 16mm 14mm;
+  }
+
+  /* ── 3. CHROME COMES OFF ─────────────────────────────────────────────────
+     Navigation, the custom cursor, the scroll indicators and the closing CTA
+     are all interactive furniture. On paper they are either meaningless or
+     actively misleading — a "Back to top" button in a PDF is a dead control. */
+  header[class*='fixed'],
+  .z-cursor,
+  [data-print='hide'],
+  #case-nav,
+  footer {
+    display: none !important;
+  }
+
+  /* Decorative layers: glow orbs, grid textures, vignettes, noise. All of them
+     are `aria-hidden` and none of them survive a printer usefully. */
+  [aria-hidden='true'][class*='pointer-events-none'] {
+    display: none !important;
+  }
+
+  /* ── 4. PAGE BREAKS ──────────────────────────────────────────────────────
+     A card split across a page boundary loses its heading, and the reader has
+     to reconstruct which section the orphaned half belonged to. */
+  .case-section {
+    break-inside: auto;
+    padding-block: 8mm !important;
+  }
+
+  .case-section h2 {
+    break-after: avoid;
+  }
+
+  .card,
+  figure,
+  li,
+  dl > div {
+    break-inside: avoid;
+  }
+
+  h1,
+  h2,
+  h3 {
+    break-after: avoid;
+    color: var(--ink) !important;
+  }
+
+  /* ── 5. TYPE ────────────────────────────────────────────────────────────
+     Slightly tighter than screen. Printed text is read closer and at higher
+     effective resolution, so the on-screen leading looks loose on paper. */
+  body {
+    font-size: 10pt;
+    line-height: 1.45;
+  }
+
+  .heading-lg {
+    font-size: 24pt !important;
+  }
+  .heading-sm {
+    font-size: 15pt !important;
+  }
+  .heading-xs {
+    font-size: 12pt !important;
+  }
+  .lead {
+    font-size: 11pt !important;
+  }
+
+  /* ── 6. SURFACES ────────────────────────────────────────────────────────
+     Glass and elevation read as grey blocks on paper. Reduced to a hairline
+     rule, which is what they were standing in for. */
+  .card,
+  .card-glass,
+  .glass {
+    background: #fff !important;
+    border: 1px solid var(--line) !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+  }
+
+  /* The gradient headline text renders as a flat fill when the background is
+     clipped away — force it to ink so it cannot come out invisible. */
+  .text-gradient {
+    background: none !important;
+    -webkit-text-fill-color: var(--ink) !important;
+    color: var(--ink) !important;
+  }
+
+  img {
+    max-width: 100% !important;
+    break-inside: avoid;
+  }
+
+  /* ── 7. LINKS ───────────────────────────────────────────────────────────
+     A URL is worthless in print unless it is printed. Only external ones —
+     expanding in-page anchors would put "#overview" beside every heading. */
+  a[href^='http']::after {
+    content: ' (' attr(href) ')';
+    font-size: 8pt;
+    color: var(--faint);
+    word-break: break-all;
+  }
+}

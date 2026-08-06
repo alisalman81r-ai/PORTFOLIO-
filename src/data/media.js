@@ -128,6 +128,8 @@ export const MEDIA = {
       gallery: [
         unsplash('1541888946425-d81bb19240f5', SIZE.gallery),
         unsplash('1503387762-592deb58ef4e', SIZE.gallery),
+        unsplash('1487017159836-4e23ece2e4cf', SIZE.gallery),
+        unsplash('1500648767791-00dcc994a43e', SIZE.gallery),
       ],
     },
     'klyra-storyboard': {
@@ -135,6 +137,8 @@ export const MEDIA = {
       gallery: [
         unsplash('1618788372246-79faff0c3742', SIZE.gallery),
         unsplash('1626785774573-4b799315345d', SIZE.gallery),
+        unsplash('1517180102446-f3ece451e9d8', SIZE.gallery),
+        unsplash('1522071820081-009f0129c71c', SIZE.gallery),
       ],
     },
     dashboard: {
@@ -142,6 +146,8 @@ export const MEDIA = {
       gallery: [
         unsplash('1460925895917-afdab827c52f', SIZE.gallery),
         unsplash('1551288049-bebda4e38f71', SIZE.gallery),
+        unsplash('1451187580459-43490279c0fa', SIZE.gallery),
+        unsplash('1507003211169-0a1dd7228f2d', SIZE.gallery),
       ],
     },
     exmo: {
@@ -149,8 +155,15 @@ export const MEDIA = {
       gallery: [
         unsplash('1518770660439-4636190af475', SIZE.gallery),
         unsplash('1620712943543-bcc4688e7485', SIZE.gallery),
+        unsplash('1438761681033-6461ffad8d80', SIZE.gallery),
       ],
     },
+
+    // No entry for 'ev-charger-finder' on purpose. The project has no artwork,
+    // no screenshots and no description anywhere in this codebase, so its case
+    // study renders empty frames that say what belongs in them. A stock photo of
+    // a charging station would look like evidence of work that has not been
+    // shown — which is the one thing this file must not do.
   },
 
   /** Keyed by post id from `blog.js`. */

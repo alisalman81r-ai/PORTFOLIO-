@@ -273,6 +273,61 @@ export const PROJECTS = [
     liveUrl: '',
     featured: false,
   },
+
+  {
+    id: 'ev-charger-finder',
+    slug: 'ev-charger-finder',
+    title: 'EV Charger Finder',
+    category: 'PLACEHOLDER — Web App / Mobile Web',
+    filters: ['web-apps'],
+    year: 2026,
+    status: 'concept',
+    // ⚠️ ADDED ON REQUEST, AND ENTIRELY UNFILLED.
+    //
+    // This record was previously removed at your instruction — you said you had
+    // not built an EV charging project. It is back because you asked for a case
+    // study for it twice since, so the slot exists and the route resolves.
+    //
+    // Nothing is written in. Every field is a placeholder, there is no entry in
+    // `media.js`, and the case study renders empty frames describing what belongs
+    // in them. Inventing a plausible EV charging app — a map, a filter for
+    // connector types, a "40% faster to find a charger" — would be fabricating
+    // work you have not done, which is the line this file does not cross.
+    //
+    // Fill it in, or delete this record and `case-studies/data/ev-charger-finder.js`
+    // together. A project a recruiter asks about and you cannot describe is worse
+    // than one fewer project.
+    role: 'PLACEHOLDER — what you actually did',
+    duration: 'PLACEHOLDER',
+    shortDescription:
+      'PLACEHOLDER — one or two sentences: what it is, who it is for, and what it does that matters.',
+    longDescription:
+      'PLACEHOLDER — the opening paragraph of the case study. Nothing is written here because no description of this project exists anywhere in the codebase.',
+    problem: 'PLACEHOLDER — what was wrong, or missing, before this existed.',
+    solution: 'PLACEHOLDER — what you built, and why you built it that way.',
+    technologies: ['PLACEHOLDER'],
+    features: [
+      { title: 'PLACEHOLDER', description: 'A capability, and why it matters to the user.' },
+      { title: 'PLACEHOLDER', description: 'Three or four is enough — pick what differentiates it.' },
+    ],
+    challenges: [
+      {
+        challenge: 'PLACEHOLDER — a real problem you hit.',
+        solution: 'PLACEHOLDER — how you resolved it.',
+      },
+    ],
+    process: [
+      { step: '01', title: 'PLACEHOLDER', description: 'How the work started.' },
+      { step: '02', title: 'PLACEHOLDER', description: 'How it took shape.' },
+      { step: '03', title: 'PLACEHOLDER', description: 'How it shipped.' },
+    ],
+    results: ['PLACEHOLDER — a qualitative outcome. Use a number only if you measured one.'],
+    thumbnail: getProjectMedia('ev-charger-finder').thumbnail,
+    gallery: getProjectMedia('ev-charger-finder').gallery,
+    githubUrl: '',
+    liveUrl: '',
+    featured: false,
+  },
 ]
 
 /**
