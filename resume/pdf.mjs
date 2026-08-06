@@ -25,6 +25,7 @@ import os from 'node:os'
 import { fileURLToPath } from 'node:url'
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
+const ROOT = path.resolve(HERE, '..')
 const EXPORTS = path.join(HERE, 'exports')
 const SOURCE = path.join(EXPORTS, 'Premium-Resume.html')
 const TARGET = path.join(EXPORTS, 'Premium-Resume.pdf')
@@ -136,8 +137,50 @@ if (!waitForPdf(TARGET)) {
 }
 
 const kb = (fs.statSync(TARGET).size / 1024).toFixed(0)
-console.log(`  ${path.relative(path.resolve(HERE, '..'), TARGET)}  ${kb} kB`)
+console.log(`  ${path.relative(ROOT, TARGET)}  ${kb} kB`)
 console.log(`  rendered with ${path.basename(browser)}`)
+
+/**
+ * Publish to `public/` so the site's Résumé button resolves.
+ *
+ * Four components link to `PERSONAL.resumeUrl` — the header, the mobile menu,
+ * the about section and the contact block — and every one of them was a 404,
+ * because nothing had ever written the file the path pointed at. A SPA with a
+ * history fallback makes that failure quiet in the worst way: the request falls
+ * through to `index.html` and React Router renders the 404 page, so it looks
+ * like a broken route rather than a missing asset.
+ *
+ * Copied here rather than committed by hand, so the download can never be an
+ * older draft than the data it was built from.
+ */
+const PUBLIC = path.join(ROOT, 'public', 'resume.pdf')
+fs.mkdirSync(path.dirname(PUBLIC), { recursive: true })
+fs.copyFileSync(TARGET, PUBLIC)
+console.log(`  ${path.relative(ROOT, PUBLIC).padEnd(34)}  published for the site's Résumé link`)
+
+// Publishing a resume full of "[Your Full Name]" is worse than most things this
+// build could do quietly, so it says so every time until the slots are filled.
+try {
+  const data = JSON.parse(fs.readFileSync(path.join(HERE, 'resume-data.json'), 'utf8'))
+  const count = (function walk(node, key = '') {
+    if (key.startsWith('_')) return 0
+    if (typeof node === 'string') return (node.match(/\[[^\]]+\]/g) ?? []).length
+    if (Array.isArray(node)) return node.reduce((n, item) => n + walk(item), 0)
+    if (node && typeof node === 'object') {
+      return Object.entries(node).reduce((n, [k, v]) => n + walk(v, k), 0)
+    }
+    return 0
+  })(data)
+
+  if (count) {
+    console.log(
+      `\n  WARNING: this PDF is now downloadable from the site and still contains\n` +
+        `  ${count} placeholder(s), including the name. Run \`npm run resume:check\`.`,
+    )
+  }
+} catch {
+  // The warning is a courtesy; never fail an export over it.
+}
 
 if (process.argv.includes('--open')) {
   const opener = process.platform === 'win32' ? 'explorer' : process.platform === 'darwin' ? 'open' : 'xdg-open'

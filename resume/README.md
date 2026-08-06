@@ -45,7 +45,7 @@ node resume/build.mjs --final               # refuses to build with placeholders
 | Applicant tracking system upload | `.docx` from `ATS-Resume.doc.html` |
 | Direct email to a hiring manager or recruiter | `Premium-Resume.pdf` |
 | Freelance client comparing proposals | `Premium-Resume.pdf` (with case studies) |
-| Your own site, `/resume.pdf` | `Premium-Resume.pdf` |
+| Your own site, `/resume.pdf` | published automatically by `npm run resume:pdf` |
 | GitHub profile README, Notion | `Premium-Resume.md` |
 
 The two are different documents on purpose. The ATS version is single-column
@@ -56,6 +56,22 @@ it — in about forty seconds.
 
 **Never send only the premium PDF to a portal.** Multi-column layout is the most
 common reason a good resume scores badly on extraction.
+
+## The site's Résumé button
+
+Four components link to `PERSONAL.resumeUrl` (`/resume.pdf`): the header, the
+mobile menu, the About section and the contact block. `npm run resume:pdf`
+copies the built PDF to `public/resume.pdf`, which is what those links resolve
+to.
+
+Before that copy existed every one of them 404'd, and the SPA history fallback
+made it quiet: the request fell through to `index.html` and React Router
+rendered the 404 page, so it looked like a broken route rather than a missing
+file. Never add the PDF to `public/` by hand — it will drift behind the data.
+
+The export currently carries placeholders, including the name, and it is
+downloadable from the site. The build warns about this on every run until
+`npm run resume:check` comes back clean.
 
 ## Editing
 
