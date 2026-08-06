@@ -12,12 +12,34 @@ import { cn } from '@/utils'
  * because clicking is what will happen.
  */
 const TARGETS = [
+  // TEXT ENTRY ONLY — AND FIRST.
+  //
+  // A caret means "you can type here". It was previously applied to every
+  // paragraph, heading and list item on the site, which put what looks exactly
+  // like a blinking text cursor in the middle of the hero headline: a reader
+  // sees an insertion point in copy they cannot edit and assumes something is
+  // broken or that the page is an editor. The affordance was wrong, and a wrong
+  // affordance is worse than none.
+  //
+  // Listed before `action` on purpose. A text input matches both selectors, and
+  // over a field you are about to type into, a caret is the truer signal than
+  // the expanding ring every button gets.
+  //
+  // Types are enumerated rather than excluded, because `input` covers checkboxes,
+  // radios, buttons, colour swatches and range sliders — none of which take
+  // typed text. `input:not([type])` is the bare `<input>`, which defaults to
+  // text. `[data-cursor="text"]` stays as a deliberate opt-in; nothing in the
+  // codebase uses it, and it cannot be triggered by accident.
+  {
+    selector:
+      'textarea, [contenteditable="true"], [data-cursor="text"], input:not([type]), ' +
+      'input[type="text"], input[type="email"], input[type="search"], input[type="tel"], ' +
+      'input[type="url"], input[type="password"], input[type="number"]',
+    state: 'text',
+  },
   { selector: 'a[href], button, [role="button"], input, textarea, select, label', state: 'action' },
   { selector: '.card, [data-cursor="card"]', state: 'card' },
   { selector: 'img, video, [data-cursor="image"]', state: 'image' },
-  // Last, so anything interactive above wins. A heading inside a link should
-  // read as a link — clicking is what will happen.
-  { selector: 'p, h1, h2, h3, h4, h5, h6, li, blockquote, [data-cursor="text"]', state: 'text' },
 ]
 
 /**
@@ -32,8 +54,8 @@ const RING_SCALE = {
   action: 'scale-[1.9]',
   card: 'scale-[2.6]',
   image: 'scale-[3.2]',
-  // Collapses toward an I-beam rather than growing — over copy the cursor
-  // should get out of the way, not announce itself. Width is handled
+  // Collapses toward an I-beam rather than growing. Over a field the cursor
+  // should show where the text will land, not announce itself. Width is handled
   // separately below.
   text: 'scale-y-[1.6] scale-x-[0.12]',
 }
@@ -65,8 +87,9 @@ const RING_SCALE = {
  *
  * STATES
  * `action` on anything clickable, `card` and `image` on content surfaces, and
- * `text` over copy — where the ring collapses to a caret and the dot disappears,
- * because over a paragraph the cursor's job is to stay out of the way.
+ * `text` over fields you can type into — where the ring collapses to a caret and
+ * the dot disappears, because a caret is the one shape that means "type here".
+ * It is deliberately not applied to body copy: see the note on TARGETS.
  *
  * In both cases the component renders nothing *and* never hides the native
  * cursor — the `data-cursor` attribute that does that is only set once this is
